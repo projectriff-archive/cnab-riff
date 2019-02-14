@@ -1,0 +1,145 @@
+apiVersion: projectriff.io/v1alpha1
+kind: Manifest
+metadata:
+  name: riff-install
+  namespace: default
+spec:
+  resources:
+  - name: istio
+    namespace: istio-system
+    checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: citadel
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: egressgateway
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: galley
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: ingressgateway
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: pilot
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio-mixer-type: policy
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: sidecar-injector
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio-mixer-type: telemetry
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/istio.yaml
+  - name: istio-riff-patch
+    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-3-0-patch.yaml
+  - checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: build-controller
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: build-webhook
+    name: build
+    namespace: knative-build
+    path: https://storage.googleapis.com/knative-nightly/build/previous/v0.3.0/release.yaml
+  - checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: activator
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: autoscaler
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: controller
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: webhook
+    name: serving
+    namespace: knative-serving
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/serving.yaml
+  - checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: eventing-controller
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: webhook
+    name: eventing
+    namespace: knative-eventing
+    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.3.0/eventing.yaml
+  - checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          clusterChannelProvisioner: in-memory-channel
+          role: dispatcher
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          clusterChannelProvisioner: in-memory-channel
+          role: controller
+    name: eventing-in-memory-channel
+    namespace: knative-eventing
+    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.3.0/in-memory-channel.yaml
+  - name: riff-build-template
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-63cd05079e1f.yaml
+  - name: riff-build-cache
+    install: false
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-cache-0.2.0-snapshot-ci-63cd05079e1f.yaml
+status: {}
