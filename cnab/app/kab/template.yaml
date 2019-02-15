@@ -7,7 +7,14 @@ spec:
   resources:
   - name: istio
     namespace: istio-system
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/istio.yaml
     checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: sidecar-injector
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -49,17 +56,13 @@ spec:
       pattern: Running
       selector:
         matchLabels:
-          istio: sidecar-injector
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
           istio-mixer-type: telemetry
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/istio.yaml
   - name: istio-riff-patch
     path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-3-0-patch.yaml
   - checks:
+    name: build
+    namespace: knative-build
+    path: https://storage.googleapis.com/knative-nightly/build/previous/v0.3.0/release.yaml
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -72,9 +75,6 @@ spec:
       selector:
         matchLabels:
           app: build-webhook
-    name: build
-    namespace: knative-build
-    path: https://storage.googleapis.com/knative-nightly/build/previous/v0.3.0/release.yaml
   - checks:
     - jsonpath: .status.phase
       kind: Pod
