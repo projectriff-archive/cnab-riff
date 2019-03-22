@@ -7,7 +7,7 @@ spec:
   resources:
   - name: istio
     namespace: istio-system
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/istio.yaml
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.4.0/istio.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
@@ -56,13 +56,26 @@ spec:
       pattern: Running
       selector:
         matchLabels:
+          istio: sidecar-injector
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
           istio-mixer-type: telemetry
-  - name: istio-riff-patch
-    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-3-0-patch.yaml
-  - checks:
-    name: build
-    namespace: knative-build
-    path: https://storage.googleapis.com/knative-nightly/build/previous/v0.3.0/release.yaml
+  - name: istio-patch
+    namespace: istio-system
+    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-4-0-patch.yaml
+    checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          istio: sidecar-injector
+  - name: knative-build
+    path: https://storage.googleapis.com/knative-releases/build/previous/v0.4.0/build.yaml
+    checks:
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -75,7 +88,10 @@ spec:
       selector:
         matchLabels:
           app: build-webhook
-  - checks:
+  - name: serving
+    namespace: knative-serving
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.4.0/serving.yaml
+    checks:
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -100,10 +116,12 @@ spec:
       selector:
         matchLabels:
           app: webhook
-    name: serving
-    namespace: knative-serving
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.3.0/serving.yaml
-  - checks:
+  - name: cluster-role
+    path: https://raw.githubusercontent.com/knative/serving/v0.4.0/third_party/config/build/clusterrole.yaml
+  - name: eventing
+    namespace: knative-eventing
+    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.4.0/eventing.yaml
+    checks:
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -116,10 +134,10 @@ spec:
       selector:
         matchLabels:
           app: webhook
-    name: eventing
+  - name: eventing-in-memory-channel
     namespace: knative-eventing
-    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.3.0/eventing.yaml
-  - checks:
+    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.4.0/in-memory-channel.yaml
+    checks:
     - jsonpath: .status.phase
       kind: Pod
       pattern: Running
@@ -134,12 +152,6 @@ spec:
         matchLabels:
           clusterChannelProvisioner: in-memory-channel
           role: controller
-    name: eventing-in-memory-channel
-    namespace: knative-eventing
-    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.3.0/in-memory-channel.yaml
   - name: riff-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-63cd05079e1f.yaml
-  - name: riff-build-cache
-    install: false
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-cache-0.2.0-snapshot-ci-63cd05079e1f.yaml
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-a974b8e885d3.yaml
 status: {}
