@@ -7,7 +7,7 @@ spec:
   resources:
   - name: istio
     namespace: istio-system
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.4.0/istio.yaml
+    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-5-0.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
@@ -63,18 +63,8 @@ spec:
       selector:
         matchLabels:
           istio-mixer-type: telemetry
-  - name: istio-patch
-    namespace: istio-system
-    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-4-0-patch.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: sidecar-injector
   - name: knative-build
-    path: https://storage.googleapis.com/knative-releases/build/previous/v0.4.0/build.yaml
+    path: https://storage.googleapis.com/knative-releases/build/previous/v0.5.0/build.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
@@ -90,7 +80,7 @@ spec:
           app: build-webhook
   - name: serving
     namespace: knative-serving
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.4.0/serving.yaml
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.5.0/serving.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
@@ -117,7 +107,7 @@ spec:
         matchLabels:
           app: webhook
   - name: cluster-role
-    path: https://raw.githubusercontent.com/knative/serving/v0.4.0/third_party/config/build/clusterrole.yaml
+    path: https://raw.githubusercontent.com/knative/serving/v0.5.0/third_party/config/build/clusterrole.yaml
   - name: eventing
     namespace: knative-eventing
     path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.4.0/eventing.yaml
@@ -153,5 +143,5 @@ spec:
           clusterChannelProvisioner: in-memory-channel
           role: controller
   - name: riff-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-a974b8e885d3.yaml
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-4bcb3aa75da4.yaml
 status: {}
