@@ -7,7 +7,7 @@ spec:
   resources:
   - name: istio
     namespace: istio-system
-    path: https://storage.googleapis.com/projectriff/istio/istio-riff-knative-serving-v0-5-0.yaml
+    path: https://storage.googleapis.com/projectriff/istio/istio-v1.0.7-riff.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
