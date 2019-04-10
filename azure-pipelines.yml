@@ -1,0 +1,17 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- script: curl -Lo duffle https://github.com/deislabs/duffle/releases/download/0.1.0-ralpha.5%2Benglishrose/duffle-linux-amd64 && chmod +x duffle && sudo cp duffle /usr/local/bin/ && rm duffle
+  displayName: 'install duffle'
+
+- script: duffle build .
+  displayName: 'build bundle'
