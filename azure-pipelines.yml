@@ -3,15 +3,32 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- master
+variables:
+  fatsDir: '$(system.defaultWorkingDirectory)/../fats'
+  fatsRefspec: 2234005739491f39fabaa75098b19c6d521af324 # projectriff/fats master as of 2019-04-09
 
 pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: curl -Lo duffle https://github.com/deislabs/duffle/releases/download/0.1.0-ralpha.5%2Benglishrose/duffle-linux-amd64 && chmod +x duffle && sudo cp duffle /usr/local/bin/ && rm duffle
+- template: ci/fetch-fats.step.yml
+- script: |
+    curl -Lo duffle https://github.com/deislabs/duffle/releases/download/0.1.0-ralpha.5%2Benglishrose/duffle-linux-amd64
+    chmod +x duffle && sudo cp duffle /usr/local/bin/ && rm duffle
   displayName: 'install duffle'
 
 - script: duffle init && duffle build .
   displayName: 'build bundle'
+
+- script: $(fatsDir)/install.sh kubectl
+  displayName: 'install kubectl'
+
+- script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
+  displayName: 'Downgrade Docker'
+
+- script: |
+    source $(fatsDir)/start.sh
+  displayName: 'install and start minikube'
+  env:
+    CLUSTER: minikube
+    REGISTRY: minikube
