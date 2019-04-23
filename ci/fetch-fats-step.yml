@@ -1,0 +1,6 @@
+steps:
+  - script: |
+      ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+      source $(fatsDir)/.util.sh
+    workingDirectory: '$(system.defaultWorkingDirectory)'
+    displayName: 'fetch fats'
