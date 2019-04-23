@@ -20,13 +20,16 @@ steps:
 - script: duffle init && duffle build .
   displayName: 'build bundle'
 
-- script: $(fatsDir)/install.sh kubectl
-  displayName: 'install kubectl'
+- script: |
+    $(fatsDir)/install.sh kubectl
+    $(fatsDir)/install.sh minikube
+  displayName: 'install tools'
 
 - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
   displayName: 'Downgrade Docker'
 
 - script: |
+    minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
     source $(fatsDir)/start.sh
   displayName: 'install and start minikube'
   env:
