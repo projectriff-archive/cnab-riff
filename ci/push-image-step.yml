@@ -1,15 +1,11 @@
 steps:
-  - task: Docker@1
-    displayName: tag edge
-    inputs:
-      command: tag
-      imageName: `docker images --format="{{.Repository}} {{.ID}}" |  grep "projectriff\/riff-cnab " |  cut -d' ' -f2`
-      arguments: $(Build.Repository.Name):edge
+  - script: |
+    echo '##vso[task.setvariable variable=imgName] `duffle show riff | jq -r .invocationImages[0].image`'
 
   - task: Docker@1
     displayName: Push edge tag
     inputs:
       command: push
-      imageName: $(Build.Repository.Name):edge
+      imageName: $(imgName)
       containerregistrytype: Container Registry
       dockerRegistryEndpoint: dockerhub
