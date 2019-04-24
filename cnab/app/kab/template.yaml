@@ -80,7 +80,7 @@ spec:
           app: build-webhook
   - name: serving
     namespace: knative-serving
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.5.0/serving.yaml
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.5.1/serving.yaml
     checks:
     - jsonpath: .status.phase
       kind: Pod
@@ -107,41 +107,7 @@ spec:
         matchLabels:
           app: webhook
   - name: cluster-role
-    path: https://raw.githubusercontent.com/knative/serving/v0.5.0/third_party/config/build/clusterrole.yaml
-  - name: eventing
-    namespace: knative-eventing
-    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.4.0/eventing.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: eventing-controller
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: webhook
-  - name: eventing-in-memory-channel
-    namespace: knative-eventing
-    path: https://storage.googleapis.com/knative-releases/eventing/previous/v0.4.0/in-memory-channel.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          clusterChannelProvisioner: in-memory-channel
-          role: dispatcher
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          clusterChannelProvisioner: in-memory-channel
-          role: controller
+    path: https://raw.githubusercontent.com/knative/serving/v0.5.1/third_party/config/build/clusterrole.yaml
   - name: riff-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0-snapshot-ci-4bcb3aa75da4.yaml
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0.yaml
 status: {}
