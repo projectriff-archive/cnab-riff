@@ -1,5 +1,5 @@
 steps:
-  - script: echo '##vso[task.setvariable variable=imgName] `duffle show riff | jq -r .invocationImages[0].image`'
+  - script: echo "##vso[task.setvariable variable=imgName] `duffle show riff | jq -r .invocationImages[0].image`"
 
   - task: Docker@1
     displayName: Push edge tag
