@@ -17,7 +17,7 @@
             "name": "cnab",
             "builder": "docker",
             "configuration": {
-                "registry": "sbawaska"
+                "registry": "projectriff"
             }
         }
     },

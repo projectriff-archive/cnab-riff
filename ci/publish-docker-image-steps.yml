@@ -1,0 +1,4 @@
+steps:
+- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+  - template: dockerhub-login-step.yml
+  - template: push-image-step.yml

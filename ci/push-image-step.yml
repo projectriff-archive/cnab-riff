@@ -1,0 +1,15 @@
+steps:
+  - task: Docker@1
+    displayName: tag edge
+    inputs:
+      command: tag
+      imageName: `docker images --format="{{.Repository}} {{.ID}}" |  grep "projectriff\/riff-cnab " |  cut -d' ' -f2`
+      arguments: $(Build.Repository.Name):edge
+
+  - task: Docker@1
+    displayName: Push edge tag
+    inputs:
+      command: push
+      imageName: $(Build.Repository.Name):edge
+      containerregistrytype: Container Registry
+      dockerRegistryEndpoint: dockerhub
