@@ -10,7 +10,7 @@ version=`cat VERSION`
 duffle export riff -t
 ls -hal
 tar -xvzf riff-*.tgz
-mv bundle.json riff-bundle-${version}.json
+mv bundle.* riff-bundle-${version}.json
 
 gcloud auth activate-service-account --key-file <(echo $GCLOUD_CLIENT_SECRET | base64 --decode)
 
