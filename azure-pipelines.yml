@@ -38,6 +38,13 @@ steps:
 
 - template: ci/install-gcloud.yml
 
+- bash: ./ci/publish.sh snapshot
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
+  env:
+    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    BUILD_NUMBER: '$(Build.BuildNumber)'
+  displayName: 'Publish riff cnab bundle'
+
 - bash: ./ci/publish.sh
   condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
   env:
