@@ -42,4 +42,5 @@ steps:
   condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
   env:
     GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    FOO: 'bar'
   displayName: 'Publish riff cnab bundle'
