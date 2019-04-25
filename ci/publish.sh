@@ -12,7 +12,7 @@ ls -hal
 tar -xvzf riff-*.tgz
 mv bundle.* riff-bundle-${version}.json
 
-gcloud auth activate-service-account --key-file <(echo $(GcloudClientSecret) | base64 --decode)
+gcloud auth activate-service-account --key-file <(echo $GCLOUD_CLIENT_SECRET | base64 --decode)
 
 bucket=gs://projectriff/riff-cnab/releases
 

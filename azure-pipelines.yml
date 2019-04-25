@@ -36,4 +36,10 @@ steps:
 
 - template: ci/publish-docker-image-steps.yml
 
-- template: ci/publish-bundle-step.yml
+- template: ci/install-gcloud.yml
+
+- bash: ./ci/publish.sh
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
+  env:
+    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+  displayName: 'Publish riff cnab bundle'
