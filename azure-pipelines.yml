@@ -47,11 +47,6 @@ jobs:
   steps:
   - template: ci/install-duffle-step.yml
 
-  - script: |
-      duffle init && duffle build .
-      duffle export riff
-    displayName: 'export bundle'
-
   - template: ci/install-gcloud.yml
 
   - bash: ./ci/publish.sh
