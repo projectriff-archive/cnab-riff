@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -7,6 +8,7 @@ set -o pipefail
 version=`cat VERSION`
 
 duffle export riff -t
+ls -hal
 tar -xvzf riff-*.tgz
 mv bundle.json riff-bundle-${version}.json
 
