@@ -29,10 +29,10 @@ steps:
 #     CLUSTER: minikube
 #     REGISTRY: minikube
 
-- script: |
-    duffle credentials add ci/myk8s.yaml
-    duffle install myriff riff --credentials myk8s
-  displayName: 'duffle install'
+# - script: |
+#     duffle credentials add ci/myk8s.yaml
+#     duffle install myriff riff --credentials myk8s
+#   displayName: 'duffle install'
 
 - template: ci/publish-docker-image-steps.yml
 
