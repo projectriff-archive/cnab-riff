@@ -1,56 +1,39 @@
-jobs:
-- job: integration
-  variables:
-    fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-    fatsRefspec: 2234005739491f39fabaa75098b19c6d521af324 # projectriff/fats master as of 2019-04-09
 
-  pool:
-    vmImage: 'Ubuntu-16.04'
+variables:
+  fatsDir: '$(system.defaultWorkingDirectory)/../fats'
+  fatsRefspec: 2234005739491f39fabaa75098b19c6d521af324 # projectriff/fats master as of 2019-04-09
 
-  steps:
-  - template: ci/fetch-fats-step.yml
-  - template: ci/install-duffle-step.yml
+pool:
+  vmImage: 'Ubuntu-16.04'
 
-  - script: duffle init && duffle build .
-    displayName: 'build bundle'
+steps:
+- template: ci/fetch-fats-step.yml
+- template: ci/install-duffle-step.yml
 
-  - script: |
-      $(fatsDir)/install.sh kubectl
-      $(fatsDir)/install.sh minikube
-    displayName: 'install tools'
+- script: duffle init && duffle build .
+  displayName: 'build bundle'
 
-  - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-    displayName: 'Downgrade Docker'
+- script: |
+    $(fatsDir)/install.sh kubectl
+    $(fatsDir)/install.sh minikube
+  displayName: 'install tools'
 
-  - script: |
-      minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
-      source $(fatsDir)/start.sh
-    displayName: 'install and start minikube'
-    env:
-      CLUSTER: minikube
-      REGISTRY: minikube
+- script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
+  displayName: 'Downgrade Docker'
 
-  - script: |
-      duffle credentials add ci/myk8s.yaml
-      duffle install myriff riff --credentials myk8s
-    displayName: 'duffle install'
+- script: |
+    minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
+    source $(fatsDir)/start.sh
+  displayName: 'install and start minikube'
+  env:
+    CLUSTER: minikube
+    REGISTRY: minikube
 
-  - template: ci/publish-docker-image-steps.yml
+- script: |
+    duffle credentials add ci/myk8s.yaml
+    duffle install myriff riff --credentials myk8s
+  displayName: 'duffle install'
 
-- job: publish
-  dependsOn: integration
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
+- template: ci/publish-docker-image-steps.yml
 
-  pool:
-    vmImage: 'Ubuntu-16.04'
-
-  steps:
-  - template: ci/install-duffle-step.yml
-
-  - template: ci/install-gcloud.yml
-
-  - bash: ./ci/publish.sh
-    env:
-      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-    displayName: 'Publish riff cnab bundle'
-  displayName: 'Publish'
+- template: ci/publish-bundle-step.yml

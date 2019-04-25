@@ -6,7 +6,6 @@ set -o pipefail
 
 version=`cat VERSION`
 
-duffle init && duffle build .
 duffle export riff -t
 tar -xvzf riff-*.tgz
 mv bundle.json riff-bundle-${version}.json
