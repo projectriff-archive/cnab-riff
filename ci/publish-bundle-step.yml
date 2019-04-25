@@ -2,7 +2,7 @@ steps:
 - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/v') }}:
   - template: install-gcloud.yml
 
-  - bash: ./publish.sh
+  - bash: ./ci/publish.sh
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
     displayName: 'Publish riff cnab bundle'
