@@ -1,4 +1,4 @@
 steps:
-- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+- ${{ if or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/v')) }}:
   - template: dockerhub-login-step.yml
   - template: push-image-step.yml
