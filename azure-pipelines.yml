@@ -34,6 +34,14 @@ steps:
     duffle install myriff riff --credentials myk8s
   displayName: 'duffle install'
 
+- script: ./tests/run.sh
+  workingDir: $(fatsDir)
+  env:
+    CLUSTER: minikube
+    REGISTRY: minikube
+    NAMESPACE: 'riff-$(Build.BuildId)-$(Agent.JobName)'
+    CLUSTER_NAME: 'riff-$(Build.BuildId)-$(Agent.JobName)'
+
 - template: ci/publish-docker-image-steps.yml
 
 - template: ci/install-gcloud.yml
