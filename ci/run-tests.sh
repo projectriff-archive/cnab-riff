@@ -7,6 +7,11 @@ set -o pipefail
 source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
 
+# setup namespace
+kubectl create namespace $NAMESPACE
+fats_create_push_credentials $NAMESPACE
+riff namespace init $NAMESPACE $NAMESPACE_INIT_FLAGS
+
 # in cluster builds
 for test in java java-boot node npm command; do
   path="$FATS_DIR/functions/uppercase/${test}"
