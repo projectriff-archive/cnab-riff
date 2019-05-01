@@ -16,6 +16,7 @@ steps:
 - script: |
     $(fatsDir)/install.sh kubectl
     $(fatsDir)/install.sh minikube
+    $(fatsDir)/install.sh riff
   displayName: 'install tools'
 
 - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
@@ -34,8 +35,8 @@ steps:
     duffle install myriff riff --credentials myk8s
   displayName: 'duffle install'
 
-- script: ./tests/run.sh
-  workingDirectory: $(fatsDir)
+- script: ./ci/run-tests.sh
+  displayName: 'run fats'
   env:
     CLUSTER: minikube
     REGISTRY: minikube
