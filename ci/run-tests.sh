@@ -5,6 +5,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+kubectl get pods --all-namespaces
+
 source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
 

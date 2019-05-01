@@ -25,6 +25,7 @@ steps:
 - script: |
     minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
     source $(fatsDir)/start.sh
+    kubectl get pods --all-namespaces
   displayName: 'install and start minikube'
   env:
     CLUSTER: minikube
@@ -33,6 +34,7 @@ steps:
 - script: |
     duffle credentials add ci/myk8s.yaml
     duffle install myriff riff --credentials myk8s
+    kubectl get pods --all-namespaces
   displayName: 'duffle install'
 
 - template: ci/install-gcloud.yml
