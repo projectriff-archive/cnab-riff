@@ -39,6 +39,8 @@ steps:
   displayName: 'run fats'
   env:
     FATS_DIR: $(fatsDir)
+    CLUSTER: minikube
+    REGISTRY: minikube
 
 - template: ci/publish-docker-image-steps.yml
 
