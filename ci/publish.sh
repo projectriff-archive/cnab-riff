@@ -5,11 +5,22 @@ set -o nounset
 set -o pipefail
 
 if [ "$#" -ne 1 ]; then
+  echo "expected to receive one of (stage/snapshot/release) as argument"
+  exit 1
+fi
+
+if [ "$1" == "stage" ]; then
+  version="`cat VERSION`-${BUILD_NUMBER}"
+  bucket=gs://projectriff/riff-cnab/builds
+elif [ "$1" == "snapshot" ]; then
+  version="`cat VERSION`-${BUILD_NUMBER}"
+  bucket=gs://projectriff/riff-cnab/snapshots
+elif [ "$1" == "release" ]; then
   version=`cat VERSION`
   bucket=gs://projectriff/riff-cnab/releases
 else
-  version="`cat VERSION`-${BUILD_NUMBER}"
-  bucket=gs://projectriff/riff-cnab/snapshots
+  echo "unknown publish argument"
+  exit 1
 fi
 
 

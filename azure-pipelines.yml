@@ -35,6 +35,15 @@ steps:
     duffle install myriff riff --credentials myk8s
   displayName: 'duffle install'
 
+- template: ci/install-gcloud.yml
+
+- bash: ./ci/publish.sh stage
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
+  env:
+    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    BUILD_NUMBER: '$(Build.BuildNumber)'
+  displayName: 'Publish riff cnab bundle'
+
 - script: ./ci/run-tests.sh
   displayName: 'run fats'
   env:
@@ -55,7 +64,7 @@ steps:
     BUILD_NUMBER: '$(Build.BuildNumber)'
   displayName: 'Publish riff cnab bundle'
 
-- bash: ./ci/publish.sh
+- bash: ./ci/publish.sh release
   condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
   env:
     GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
