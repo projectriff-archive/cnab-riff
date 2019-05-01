@@ -41,6 +41,8 @@ steps:
     FATS_DIR: $(fatsDir)
     CLUSTER: minikube
     REGISTRY: minikube
+    CLUSTER_NAME: 'fats-$(Build.BuildId)'
+    NAMESPACE: '$(CLUSTER_NAME)'
 
 - template: ci/publish-docker-image-steps.yml
 
