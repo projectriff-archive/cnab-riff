@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
 
 # in cluster builds
