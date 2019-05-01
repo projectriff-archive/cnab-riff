@@ -38,10 +38,7 @@ steps:
 - script: ./ci/run-tests.sh
   displayName: 'run fats'
   env:
-    CLUSTER: minikube
-    REGISTRY: minikube
-    NAMESPACE: 'riff-$(Build.BuildId)-$(Agent.JobName)'
-    CLUSTER_NAME: 'riff-$(Build.BuildId)-$(Agent.JobName)'
+    FATS_DIR: $(fatsDir)
 
 - template: ci/publish-docker-image-steps.yml
 

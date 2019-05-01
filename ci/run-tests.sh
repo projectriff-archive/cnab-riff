@@ -4,11 +4,11 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-source `dirname "${BASH_SOURCE[0]}"`/../functions/helpers.sh
+source $FATS_DIR/functions/helpers.sh
 
 # in cluster builds
 for test in java java-boot node npm command; do
-  path=`dirname "${BASH_SOURCE[0]}"`/../functions/uppercase/${test}
+  path="$FATS_DIR/functions/uppercase/${test}"
   function_name=fats-cluster-uppercase-${test}
   image=$(fats_image_repo ${function_name})
   create_args="--git-repo $(git remote get-url origin) --git-revision $(git rev-parse HEAD) --sub-path functions/uppercase/${test}"
@@ -22,7 +22,7 @@ done
 if [ "$machine" != "MinGw" ]; then
   # TODO enable for windows once we have a linux docker daemon available
   for test in java java-boot node npm command; do
-    path=`dirname "${BASH_SOURCE[0]}"`/../functions/uppercase/${test}
+    path="$FATS_DIR/functions/uppercase/${test}"
     function_name=fats-local-uppercase-${test}
     image=$(fats_image_repo ${function_name})
     create_args="--local-path ."
