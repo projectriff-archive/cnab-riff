@@ -44,7 +44,7 @@ steps:
     BUILD_NUMBER: '$(Build.BuildNumber)'
   displayName: 'Publish riff cnab bundle'
 
-- script: ./ci/run-tests.sh
+- bash: ./ci/run-tests.sh
   displayName: 'run fats'
   env:
     FATS_DIR: $(fatsDir)
