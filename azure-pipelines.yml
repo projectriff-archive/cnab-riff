@@ -75,6 +75,7 @@ jobs:
     NAMESPACE: '$(CLUSTER_NAME)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
+  steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
 
@@ -96,6 +97,7 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
 
+  steps:
   - template: ci/publish-docker-image-steps.yml
 
   - template: ci/install-gcloud.yml
@@ -107,8 +109,8 @@ jobs:
       BUILD_NUMBER: '$(Build.BuildNumber)'
     displayName: 'Publish riff cnab bundle'
 
-- bash: ./ci/publish.sh release
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
-  env:
-    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-  displayName: 'Publish riff cnab bundle'
+  - bash: ./ci/publish.sh release
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    displayName: 'Publish riff cnab bundle'
