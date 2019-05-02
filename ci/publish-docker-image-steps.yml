@@ -1,4 +1,4 @@
 steps:
-- ${{ if and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) }}:
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - template: dockerhub-login-step.yml
   - template: push-image-step.yml
