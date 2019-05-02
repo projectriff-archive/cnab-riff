@@ -5,11 +5,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-kubectl get pods --all-namespaces
-
 source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
 $FATS_DIR/install.sh kail
+
+echo "Checking for ready pods"
+wait_pod_selector_ready 'app=controller' 'knative-serving'
+wait_pod_selector_ready 'app=webhook' 'knative-serving'
+wait_pod_selector_ready 'app=build-controller' 'knative-build'
+wait_pod_selector_ready 'app=build-webhook' 'knative-build'
+echo "Checking for ready ingress"
+wait_for_ingress_ready 'istio-ingressgateway' 'istio-system'
 
 # setup namespace
 kubectl create namespace $NAMESPACE
