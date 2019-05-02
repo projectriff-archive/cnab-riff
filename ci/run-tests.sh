@@ -9,6 +9,7 @@ kubectl get pods --all-namespaces
 
 source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
+$FATS_DIR/install.sh kail
 
 # setup namespace
 kubectl create namespace $NAMESPACE
