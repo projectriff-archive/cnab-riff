@@ -120,7 +120,12 @@ jobs:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       FATS_DIR: $(fatsDir)
 
-  - bash: source $(fatsDir)/cleanup.sh
+  - bash: |
+      kubectl get deployments,services,pods --all-namespaces || true
+      kubectl get pods --all-namespaces --field-selector=status.phase!=Running \
+      | tail -n +2 | awk '{print "-n", $1, $2}' | xargs -L 1 kubectl describe pod || true
+      kubectl describe node || true
+      source $(fatsDir)/cleanup.sh
     env:
       DOCKER_USERNAME: '$(DockerUsername)'
       DOCKER_PASSWORD: '$(DockerPassword)'
