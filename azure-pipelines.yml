@@ -78,6 +78,8 @@ jobs:
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
+  - script: source $(fatsDir)/start.sh
+    displayName: 'setup cluster'
 
   - script: |
       version="`cat VERSION`-$(Build.BuildNumber)"
