@@ -35,7 +35,6 @@ jobs:
   - script: |
       duffle credentials add ci/myk8s.yaml
       duffle install myriff riff --credentials myk8s
-      kubectl get pods --all-namespaces
     displayName: 'duffle install'
 
   - template: ci/install-gcloud.yml
@@ -78,6 +77,12 @@ jobs:
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
+
+  - script: |
+      $(fatsDir)/install.sh kubectl
+      $(fatsDir)/install.sh minikube
+      $(fatsDir)/install.sh riff
+    displayName: 'install tools'
 
   - script: |
       sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
