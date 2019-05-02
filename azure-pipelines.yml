@@ -93,8 +93,11 @@ jobs:
 
   - script: |
       sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-      minikube config set embed-certs true
-    condition: and(succeeded(), eq(variables['CLUSTER'], 'minikube'))
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: 'downgrade docker'
+
+  - script: minikube config set embed-certs true
+    condition: eq(variables['CLUSTER'], 'minikube')
     displayName: 'setup minikube'
 
   - script: source $(fatsDir)/start.sh
