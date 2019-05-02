@@ -56,22 +56,23 @@ jobs:
         imageName: ubuntu-16.04
         qualifier: minikube
         cluster: minikube
-        registry: dockerhub
-      mac:
-        imageName: macOS-10.14
-        qualifier: mac
-        cluster: minikube
         registry: docker-daemon
-      gke:
-        imageName: ubuntu-16.04
-        qualifier: gke
-        cluster: gke
-        registry: gcr
-      windows:
-        imageName: windows-2019
-        qualifier: windows
-        cluster: gke
-        registry: gcr
+        # registry: dockerhub
+      # mac:
+      #   imageName: macOS-10.14
+      #   qualifier: mac
+      #   cluster: minikube
+      #   registry: docker-daemon
+      # gke:
+      #   imageName: ubuntu-16.04
+      #   qualifier: gke
+      #   cluster: gke
+      #   registry: gcr
+      # windows:
+      #   imageName: windows-2019
+      #   qualifier: windows
+      #   cluster: gke
+      #   registry: gcr
   pool:
     vmImage: $(imageName)
   variables:
