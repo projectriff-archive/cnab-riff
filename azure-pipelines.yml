@@ -84,7 +84,7 @@ jobs:
       file=riff-bundle-${version}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       duffle credentials add ci/myk8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials myk8s
+      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
     displayName: 'install riff from cnab bundle'
 
   - bash: ./ci/run-tests.sh
