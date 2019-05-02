@@ -106,7 +106,18 @@ jobs:
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
     env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       FATS_DIR: $(fatsDir)
+
+  - bash: source $(fatsDir)/cleanup.sh
+    env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    condition: always()
+    displayName: 'Cleanup FATS'
 
 - job: publish
   dependsOn: test
