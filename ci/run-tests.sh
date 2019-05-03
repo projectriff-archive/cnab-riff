@@ -42,7 +42,7 @@ if [ "$machine" != "MinGw" ]; then
     path="$FATS_DIR/functions/uppercase/${test}"
     function_name=fats-local-uppercase-${test}
     image=$(fats_image_repo ${function_name})
-    create_args="--local-path ${FATS_DIR}"
+    create_args="--local-path ."
     input_data=cnab
     expected_data=CNAB
 
