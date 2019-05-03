@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: b9dd3b03e3fa4fdf80f36ef9c871fc5b605a1208 # projectriff/fats master as of 2019-05-01
+  fatsRefspec: a224572f2f9685de7d7312f4d6c7e2892699fdd5 # projectriff/fats master as of 2019-05-01
 
 jobs:
 - job: build
@@ -113,7 +113,7 @@ jobs:
     condition: eq(variables['CLUSTER'], 'minikube')
     displayName: 'setup minikube'
 
-  - script: source $(fatsDir)/start.sh && kubectl get pods --all-namespaces
+  - script: source $(fatsDir)/start.sh
     displayName: 'setup cluster'
 
   - script: |
