@@ -42,8 +42,8 @@ jobs:
     env:
       CLUSTER:  'minikube'
       REGISTRY: 'docker-daemon'
-      CLUSTER_NAME: 'riff-$(Build.BuildId)-$(qualifier)'
-      NAMESPACE: '$(CLUSTER_NAME)'
+      CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
+      NAMESPACE: 'riff-$(Build.BuildId)-minikube'
       DOCKER_USERNAME: '$(DockerUsername)'
       DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
