@@ -37,6 +37,18 @@ jobs:
       duffle install myriff riff --credentials myk8s
     displayName: 'duffle install'
 
+  - bash: ./ci/run-tests.sh
+    displayName: 'run fats'
+    env:
+      CLUSTER:  'minikube'
+      REGISTRY: 'docker-daemon'
+      CLUSTER_NAME: 'riff-$(Build.BuildId)-$(qualifier)'
+      NAMESPACE: '$(CLUSTER_NAME)'
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      FATS_DIR: $(fatsDir)
+
   - template: ci/install-gcloud.yml
 
   - bash: ./ci/publish.sh stage
