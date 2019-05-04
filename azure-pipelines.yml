@@ -142,6 +142,7 @@ jobs:
       DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       FATS_DIR: $(fatsDir)
+      FATS_REFSPEC: $(fatsRefspec)
 
   - bash: |
       kubectl get deployments,services,pods --all-namespaces || true
