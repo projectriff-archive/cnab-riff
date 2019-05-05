@@ -1,6 +1,3 @@
-variables:
-  duffleVersion: '0.1.0-ralpha.5%2Benglishrose'
-
 steps:
   - script: |
       curl -Lo duffle https://github.com/deislabs/duffle/releases/download/$(duffleVersion)/duffle-linux-amd64
