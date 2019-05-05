@@ -126,6 +126,8 @@ jobs:
 
   - script: source $(fatsDir)/start.sh
     displayName: 'setup cluster'
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
 
   - script: |
       version="`cat VERSION`-$(Build.BuildNumber)"
