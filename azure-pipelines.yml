@@ -108,6 +108,7 @@ jobs:
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
+  - template: ci/install-gcloud.yml
 
   - script: |
       $(fatsDir)/install.sh kubectl
