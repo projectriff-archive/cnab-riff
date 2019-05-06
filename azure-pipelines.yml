@@ -128,6 +128,7 @@ jobs:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
 
   - bash: |
+      set -x
       version="`cat VERSION`-$(Build.BuildNumber)"
       file=riff-bundle-${version}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
