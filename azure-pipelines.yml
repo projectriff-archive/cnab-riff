@@ -104,7 +104,7 @@ jobs:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
 
-  - script: |
+  - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
