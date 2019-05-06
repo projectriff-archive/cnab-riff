@@ -61,9 +61,9 @@ jobs:
     condition: failed()
     displayName: 'diagnostics'
 
-  - template: ci/install-gcloud.yml
-
-  - bash: ./ci/publish.sh stage
+  - bash: |
+      $(fatsDir)/install.sh gcloud
+      ./ci/publish.sh stage
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
@@ -108,13 +108,15 @@ jobs:
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
-  - template: ci/install-gcloud.yml
 
   - script: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
+      $(fatsDir)/install.sh gcloud
     displayName: 'install tools'
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
 
   - script: |
       sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1

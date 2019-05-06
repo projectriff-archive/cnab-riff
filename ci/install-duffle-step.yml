@@ -1,5 +1,5 @@
 steps:
-  - script: |
+  - bash: |
       curl -Lo duffle https://github.com/deislabs/duffle/releases/download/$(duffleVersion)/duffle-linux-amd64
       chmod +x duffle
       sudo cp duffle /usr/local/bin/
@@ -7,7 +7,7 @@ steps:
     condition: eq( variables['Agent.OS'], 'Linux' )
     displayName: 'install duffle on linux'
 
-  - script: |
+  - bash: |
       curl -Lo duffle https://github.com/deislabs/duffle/releases/download/$(duffleVersion)/duffle-darwin-amd64
       chmod +x duffle
       sudo cp duffle /usr/local/bin/
@@ -15,7 +15,7 @@ steps:
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: 'install duffle on mac'
 
-  - script: |
+  - bash: |
       curl -Lo duffle.exe https://github.co//m/deislabs/duffle/releases/download/$(duffleVersion)/duffle-windows-amd64.exe
       mv duffle.exe /usr/bin
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
