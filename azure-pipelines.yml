@@ -132,7 +132,7 @@ jobs:
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
 
-  - script: |
+  - bash: |
       version="`cat VERSION`-$(Build.BuildNumber)"
       file=riff-bundle-${version}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
@@ -174,9 +174,9 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
-  - template: ci/install-gcloud.yml
-
-  - bash: ./ci/publish.sh snapshot
+  - bash: |
+      $(fatsDir)/install.sh gcloud
+      ./ci/publish.sh snapshot
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
