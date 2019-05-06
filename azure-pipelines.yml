@@ -7,11 +7,21 @@ variables:
 jobs:
 - job: build
   pool:
-    vmImage: 'Ubuntu-16.04'
+    vmImage: 'windows-2019'
 
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
+
+  - bash: |
+      set -x
+      version="`cat VERSION`-$(Build.BuildNumber)"
+      file=riff-bundle-0.1.0-20190506.5.json
+      curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
+      duffle credentials add ci/myk8s.yaml
+      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
+    displayName: 'install riff from cnab bundle'
+
 
   - script: duffle init && duffle build .
     displayName: 'build bundle'
