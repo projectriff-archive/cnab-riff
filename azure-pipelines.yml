@@ -122,7 +122,7 @@ jobs:
     condition: eq(variables['CLUSTER'], 'minikube')
     displayName: 'setup minikube'
 
-  - script: source $(fatsDir)/start.sh
+  - bash: source $(fatsDir)/start.sh
     displayName: 'setup cluster'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
