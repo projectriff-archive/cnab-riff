@@ -16,7 +16,7 @@ steps:
     displayName: 'install duffle on mac'
 
   - bash: |
-      curl -Lo duffle.exe https://github.co//m/deislabs/duffle/releases/download/$(duffleVersion)/duffle-windows-amd64.exe
+      curl -Lo duffle.exe https://github.com/deislabs/duffle/releases/download/$(duffleVersion)/duffle-windows-amd64.exe
       mv duffle.exe /usr/bin
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: 'install duffle on windows'
