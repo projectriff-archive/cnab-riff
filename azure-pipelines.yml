@@ -13,19 +13,6 @@ jobs:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
 
-  - bash: |
-      set -x
-      version="`cat VERSION`-$(Build.BuildNumber)"
-      file=riff-bundle-0.1.0-20190506.5.json
-      curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      cat ci/myk8s.yaml
-      duffle || true
-      duffle credentials list -v
-      duffle credentials add ci/myk8s.yaml -v
-      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
-    displayName: 'install riff from cnab bundle'
-
-
   - script: duffle init && duffle build .
     displayName: 'build bundle'
 
@@ -141,7 +128,6 @@ jobs:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
 
   - bash: |
-      set -x
       version="`cat VERSION`-$(Build.BuildNumber)"
       file=riff-bundle-${version}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
