@@ -20,6 +20,9 @@ jobs:
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       cat ci/myk8s.yaml
       tr -d '\015' <ci/myk8s.yaml >ci/myk8s-unix.yaml
+      cat ci/myk8s.yaml
+      duffle || true
+      duffle.exe || true
       duffle.exe credentials list -v
       duffle.exe credentials add ci/myk8s-unix.yaml -v
       duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
