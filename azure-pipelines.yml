@@ -82,11 +82,6 @@ jobs:
         qualifier: gke
         cluster: gke
         registry: gcr
-      windows:
-        imageName: windows-2019
-        qualifier: windows
-        cluster: gke
-        registry: gcr
   pool:
     vmImage: $(imageName)
   variables:
