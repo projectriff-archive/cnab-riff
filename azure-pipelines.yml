@@ -38,7 +38,7 @@ jobs:
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       duffle credentials add ci/myk8s.yaml
       echo "COMPOSE_CONVERT_WINDOWS_PATHS: $COMPOSE_CONVERT_WINDOWS_PATHS"
-      docker
+      docker -SwitchLinuxEngine
       docker run -d -p 5000:5000 registry:2
       duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
     displayName: 'install riff from cnab bundle'
