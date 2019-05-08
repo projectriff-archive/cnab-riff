@@ -18,7 +18,7 @@ jobs:
 
   - script: |
       $(fatsDir)/install.sh kubectl
-#      $(fatsDir)/install.sh minikube
+      $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
     displayName: 'install tools'
 ### hack
