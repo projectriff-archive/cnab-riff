@@ -16,7 +16,7 @@ jobs:
   # - script: duffle init && duffle build .
   #   displayName: 'build bundle'
 
-  - script: |
+  - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
