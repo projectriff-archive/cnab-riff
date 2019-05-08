@@ -7,7 +7,7 @@ variables:
 jobs:
 - job: build
   pool:
-    vmImage: 'Ubuntu-16.04'
+    vmImage: 'windows-2019'
 
   steps:
   - template: ci/fetch-fats-step.yml
@@ -21,7 +21,41 @@ jobs:
       $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
     displayName: 'install tools'
+### hack
+  - bash: source $(fatsDir)/start.sh
+    displayName: 'setup cluster'
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      CLUSTER:  'gke'
+      REGISTRY: 'gcr'
+      CLUSTER_NAME: 'riff-$(Build.BuildId)-gke'
+      NAMESPACE: 'riff-$(Build.BuildId)-gke'
 
+  - bash: |
+      set -x
+      version="0.1.0-20190502.1"
+      file=riff-bundle-${version}.json
+      curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
+      duffle credentials add ci/myk8s.yaml
+      echo "COMPOSE_CONVERT_WINDOWS_PATHS: $COMPOSE_CONVERT_WINDOWS_PATHS"
+      docker
+      docker run -d -p 5000:5000 registry:2
+      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
+    displayName: 'install riff from cnab bundle'
+    env:
+      COMPOSE_CONVERT_WINDOWS_PATHS: 1
+
+  - bash: source $(fatsDir)/cleanup.sh
+    displayName: 'cleanup cluster'
+    condition: always()
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      CLUSTER:  'gke'
+      REGISTRY: 'gcr'
+      CLUSTER_NAME: 'riff-$(Build.BuildId)-gke'
+      NAMESPACE: 'riff-$(Build.BuildId)-gke'
+
+## hack end
   - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
     displayName: 'Downgrade Docker'
 
