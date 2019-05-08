@@ -13,12 +13,12 @@ jobs:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
 
-  - script: duffle init && duffle build .
-    displayName: 'build bundle'
+  # - script: duffle init && duffle build .
+  #   displayName: 'build bundle'
 
   - script: |
       $(fatsDir)/install.sh kubectl
-      $(fatsDir)/install.sh minikube
+#      $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
     displayName: 'install tools'
 ### hack
