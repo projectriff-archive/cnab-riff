@@ -1,52 +1,163 @@
 
 variables:
+  duffleVersion: '0.1.0-ralpha.5%2Benglishrose'
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: 2234005739491f39fabaa75098b19c6d521af324 # projectriff/fats master as of 2019-04-09
+  fatsRefspec: a224572f2f9685de7d7312f4d6c7e2892699fdd5 # projectriff/fats master as of 2019-05-01
 
-pool:
-  vmImage: 'Ubuntu-16.04'
+jobs:
+- job: build
+  pool:
+    vmImage: 'ubuntu-16.04'
 
-steps:
-- template: ci/fetch-fats-step.yml
-- template: ci/install-duffle-step.yml
-
-- script: duffle init && duffle build .
-  displayName: 'build bundle'
-
-- script: |
-    $(fatsDir)/install.sh kubectl
-    $(fatsDir)/install.sh minikube
-  displayName: 'install tools'
-
-- script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-  displayName: 'Downgrade Docker'
-
-- script: |
-    minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
-    source $(fatsDir)/start.sh
-  displayName: 'install and start minikube'
-  env:
+  variables:
     CLUSTER: minikube
     REGISTRY: minikube
+    CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
+    NAMESPACE: 'riff-$(Build.BuildId)-minikube'
 
-- script: |
-    duffle credentials add ci/myk8s.yaml
-    duffle install myriff riff --credentials myk8s
-  displayName: 'duffle install'
+  steps:
+  - template: ci/fetch-fats-step.yml
+  - template: ci/install-duffle-step.yml
 
-- template: ci/publish-docker-image-steps.yml
+  - script: duffle init && duffle build .
+    displayName: 'build bundle'
 
-- template: ci/install-gcloud.yml
+  - bash: |
+      $(fatsDir)/install.sh kubectl
+      $(fatsDir)/install.sh minikube
+      $(fatsDir)/install.sh riff
+    displayName: 'install tools'
 
-- bash: ./ci/publish.sh snapshot
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
-  env:
-    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-    BUILD_NUMBER: '$(Build.BuildNumber)'
-  displayName: 'Publish riff cnab bundle'
+  - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
+    displayName: 'Downgrade Docker'
 
-- bash: ./ci/publish.sh
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
-  env:
-    GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-  displayName: 'Publish riff cnab bundle'
+  - script: |
+      minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
+      source $(fatsDir)/start.sh
+    displayName: 'install and start minikube'
+
+  - script: |
+      duffle credentials add ci/myk8s.yaml
+      duffle install myriff riff --credentials myk8s
+    displayName: 'duffle install'
+
+  - bash: ./ci/run-tests.sh
+    displayName: 'run fats'
+    env:
+      FATS_DIR: $(fatsDir)
+      FATS_REFSPEC: $(fatsRefspec)
+
+  - bash: ci/diagnostics.sh
+    condition: failed()
+    displayName: 'diagnostics'
+
+  - bash: |
+      $(fatsDir)/install.sh gcloud
+      ./ci/publish.sh stage
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      BUILD_NUMBER: '$(Build.BuildNumber)'
+    displayName: 'Publish riff cnab bundle'
+
+  - template: ci/publish-docker-image-steps.yml
+
+- job: test
+  dependsOn: build
+  strategy:
+    matrix:
+      minikube:
+        imageName: ubuntu-16.04
+        qualifier: minikube
+        cluster: minikube
+        registry: dockerhub
+      gke:
+        imageName: ubuntu-16.04
+        qualifier: gke
+        cluster: gke
+        registry: gcr
+  pool:
+    vmImage: $(imageName)
+  variables:
+    CLUSTER:  '$(cluster)'
+    REGISTRY: '$(registry)'
+    CLUSTER_NAME: 'riff-$(Build.BuildId)-$(qualifier)'
+    NAMESPACE: '$(CLUSTER_NAME)'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  steps:
+  - template: ci/fetch-fats-step.yml
+  - template: ci/install-duffle-step.yml
+
+  - bash: |
+      $(fatsDir)/install.sh kubectl
+      $(fatsDir)/install.sh minikube
+      $(fatsDir)/install.sh riff
+      $(fatsDir)/install.sh gcloud
+    displayName: 'install tools'
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+
+  - script: |
+      sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
+      minikube config set embed-certs true
+    condition: eq(variables['CLUSTER'], 'minikube')
+    displayName: 'setup minikube'
+
+  - bash: source $(fatsDir)/start.sh
+    displayName: 'setup cluster'
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+
+  - bash: |
+      version="`cat VERSION`-$(Build.BuildNumber)"
+      file=riff-bundle-${version}.json
+      curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
+      duffle credentials add ci/myk8s.yaml
+      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
+    displayName: 'install riff from cnab bundle'
+    env:
+      COMPOSE_CONVERT_WINDOWS_PATHS: 1
+
+  - bash: ./ci/run-tests.sh
+    displayName: 'run fats'
+    env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      FATS_DIR: $(fatsDir)
+      FATS_REFSPEC: $(fatsRefspec)
+
+  - bash: ci/diagnostics.sh
+    condition: failed()
+    displayName: 'diagnostics'
+
+  - bash: |
+      source $(fatsDir)/cleanup.sh
+    env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    condition: always()
+    displayName: 'Cleanup FATS'
+
+- job: publish
+  dependsOn: test
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  steps:
+  - bash: |
+      $(fatsDir)/install.sh gcloud
+      ./ci/publish.sh snapshot
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+      BUILD_NUMBER: '$(Build.BuildNumber)'
+    displayName: 'Publish riff cnab bundle'
+
+  - bash: ./ci/publish.sh release
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
+    env:
+      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    displayName: 'Publish riff cnab bundle'
