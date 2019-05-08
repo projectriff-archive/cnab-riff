@@ -134,6 +134,8 @@ jobs:
       duffle credentials add ci/myk8s.yaml
       duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
     displayName: 'install riff from cnab bundle'
+    env:
+      COMPOSE_CONVERT_WINDOWS_PATHS: 1
 
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
