@@ -9,6 +9,12 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
 
+  variables:
+    CLUSTER: minikube
+    REGISTRY: minikube
+    CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
+    NAMESPACE: 'riff-$(Build.BuildId)-minikube'
+
   steps:
   - template: ci/fetch-fats-step.yml
   - template: ci/install-duffle-step.yml
@@ -29,9 +35,6 @@ jobs:
       minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
       source $(fatsDir)/start.sh
     displayName: 'install and start minikube'
-    env:
-      CLUSTER: minikube
-      REGISTRY: minikube
 
   - script: |
       duffle credentials add ci/myk8s.yaml
@@ -41,13 +44,6 @@ jobs:
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
     env:
-      CLUSTER:  'minikube'
-      REGISTRY: 'docker-daemon'
-      CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
-      NAMESPACE: 'riff-$(Build.BuildId)-minikube'
-      DOCKER_USERNAME: '$(DockerUsername)'
-      DOCKER_PASSWORD: '$(DockerPassword)'
-      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       FATS_DIR: $(fatsDir)
       FATS_REFSPEC: $(fatsRefspec)
 
@@ -115,10 +111,7 @@ jobs:
 
   - script: |
       sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-    condition: eq( variables['Agent.OS'], 'Linux' )
-    displayName: 'downgrade docker'
-
-  - script: minikube config set embed-certs true
+      minikube config set embed-certs true
     condition: eq(variables['CLUSTER'], 'minikube')
     displayName: 'setup minikube'
 
