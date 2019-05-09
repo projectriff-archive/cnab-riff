@@ -53,7 +53,7 @@ jobs:
 
   - bash: |
       $(fatsDir)/install.sh gcloud
-      ./ci/publish.sh stage
+      ./ci/publish-build.sh
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
@@ -147,6 +147,8 @@ jobs:
     vmImage: 'Ubuntu-16.04'
 
   steps:
+  - template: ci/fetch-fats-step.yml
+
   - bash: |
       $(fatsDir)/install.sh gcloud
       ./ci/publish.sh snapshot
@@ -156,7 +158,9 @@ jobs:
       BUILD_NUMBER: '$(Build.BuildNumber)'
     displayName: 'Publish riff cnab bundle'
 
-  - bash: ./ci/publish.sh release
+  - bash: |
+      $(fatsDir)/install.sh gcloud
+      ./ci/publish.sh release
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'

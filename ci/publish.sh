@@ -9,10 +9,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-if [ "$1" == "stage" ]; then
-  version="`cat VERSION`-${BUILD_NUMBER}"
-  bucket=gs://projectriff/riff-cnab/builds
-elif [ "$1" == "snapshot" ]; then
+build_bucket=gs://projectriff/riff-cnab/builds
+build_file="riff-bundle-`cat VERSION`-${BUILD_NUMBER}.json"
+
+if [ "$1" == "snapshot" ]; then
   version="`cat VERSION`-${BUILD_NUMBER}"
   bucket=gs://projectriff/riff-cnab/snapshots
 elif [ "$1" == "release" ]; then
@@ -23,11 +23,9 @@ else
   exit 1
 fi
 
-
-duffle export riff -t
-tar -xvzf riff-*.tgz
-mv bundle.* riff-bundle-${version}.json
+dest_file="riff-bundle-${version}.json"
 
 gcloud auth activate-service-account --key-file <(echo $GCLOUD_CLIENT_SECRET | base64 --decode)
 
-gsutil cp -a public-read -n riff-bundle-${version}.json ${bucket}/
+gsutil cp -a public-read -n ${build_bucket}/${build_file} ${bucket}/${dest_file}
+gsutil cp -a public-read -n ${build_bucket}/${build_file} gs://projectriff/riff-cnab/snapshots/riff-bundle-latest.json
