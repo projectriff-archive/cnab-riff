@@ -25,5 +25,27 @@
         "kubeconfig": {
             "path": "/root/.kube/config"
         }
+    },
+    "parameters": {
+        "node_port": {
+            "type": "boolean",
+            "metadata": {
+                "description": "should LoadBalancer should be substituted with node port"
+            },
+            "destination": {
+                "env": "NODE_PORT"
+            },
+            "default": "false"
+        },
+        "manifest_file": {
+            "type": "string",
+            "metadata": {
+                "description": "absolute path to the manifest file"
+            },
+            "destination": {
+                "env:": "MANIFEST_FILE"
+            },
+            "default": "/cnab/app/kab/manifest.yaml"
+        }
     }
 }
