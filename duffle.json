@@ -27,16 +27,6 @@
         }
     },
     "parameters": {
-        "node_port": {
-            "type": "boolean",
-            "metadata": {
-                "description": "should LoadBalancer should be substituted with node port"
-            },
-            "destination": {
-                "env": "NODE_PORT"
-            },
-            "default": "false"
-        },
         "manifest_file": {
             "type": "string",
             "metadata": {
