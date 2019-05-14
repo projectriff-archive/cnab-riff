@@ -46,6 +46,16 @@
                 "env:": "MANIFEST_FILE"
             },
             "default": "/cnab/app/kab/manifest.yaml"
+        },
+        "log_level": {
+            "type": "string",
+            "metadata": {
+                "description": "one of logrus log level values"
+            },
+            "destination": {
+                "env:": "LOG_LEVEL"
+            },
+            "default": "info"
         }
     }
 }
