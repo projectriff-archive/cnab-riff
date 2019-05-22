@@ -106,6 +106,22 @@ spec:
       selector:
         matchLabels:
           app: webhook
+  - name: riff-system
+    namespace: riff-system
+    path: https://storage.googleapis.com/projectriff/riff-system/riff-system-0.1.0-snapshot.yaml
+    checks:
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: controller
+    - jsonpath: .status.phase
+      kind: Pod
+      pattern: Running
+      selector:
+        matchLabels:
+          app: webhook
   - name: cluster-role
     path: https://raw.githubusercontent.com/knative/serving/v0.5.1/third_party/config/build/clusterrole.yaml
   - name: riff-build-template
