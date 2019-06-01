@@ -1,133 +1,27 @@
 apiVersion: projectriff.io/v1alpha1
 kind: Manifest
 metadata:
+  namespace: kube-system
   name: riff-install
-  namespace: default
 spec:
   resources:
   - name: istio
     namespace: istio-system
     path: https://storage.googleapis.com/projectriff/istio/istio-v1.0.7-riff.yaml
     checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
+    - kind: Pod
       selector:
         matchLabels:
           istio: sidecar-injector
-    - jsonpath: .status.phase
-      kind: Pod
+      jsonpath: .status.phase
       pattern: Running
-      selector:
-        matchLabels:
-          istio: citadel
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: egressgateway
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: galley
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: ingressgateway
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: pilot
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio-mixer-type: policy
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio: sidecar-injector
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          istio-mixer-type: telemetry
   - name: knative-build
     path: https://storage.googleapis.com/knative-releases/build/previous/v0.6.0/build.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: build-controller
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: build-webhook
-  - name: serving
-    namespace: knative-serving
+  - name: knative-serving
     path: https://storage.googleapis.com/knative-releases/serving/previous/v0.6.0/serving.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: activator
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: autoscaler
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: controller
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: webhook
   - name: riff-system
-    namespace: riff-system
     path: https://storage.googleapis.com/projectriff/riff-system/riff-system-0.1.0-snapshot.yaml
-    checks:
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: controller
-    - jsonpath: .status.phase
-      kind: Pod
-      pattern: Running
-      selector:
-        matchLabels:
-          app: webhook
-  - name: cluster-role
-    path: https://raw.githubusercontent.com/knative/serving/v0.5.1/third_party/config/build/clusterrole.yaml
-  - name: riff-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-cnb-clusterbuildtemplate-0.2.0.yaml
   - name: riff-application-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-application-clusterbuildtemplate.yaml
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-application-clusterbuildtemplate-0.3.0-snapshot.yaml
   - name: riff-function-build-template
-    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-function-clusterbuildtemplate.yaml
-status: {}
+    path: https://storage.googleapis.com/projectriff/riff-buildtemplate/riff-function-clusterbuildtemplate-0.3.0-snapshot.yaml
