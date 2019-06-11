@@ -6,15 +6,7 @@ metadata:
 spec:
   resources:
   - name: istio
-    namespace: istio-system
-    path: https://storage.googleapis.com/projectriff/istio/istio-v1.0.7-riff.yaml
-    checks:
-    - kind: Pod
-      selector:
-        matchLabels:
-          istio: sidecar-injector
-      jsonpath: .status.phase
-      pattern: Running
+    path: https://storage.googleapis.com/projectriff/istio/istio-v1.0.7-lean-riff.yaml
   - name: knative-build
     path: https://storage.googleapis.com/knative-releases/build/previous/v0.6.0/build.yaml
   - name: knative-serving
