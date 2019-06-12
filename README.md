@@ -1,7 +1,7 @@
 [![Build Status](https://dev.azure.com/projectriff/projectriff/_apis/build/status/projectriff.cnab-riff?branchName=master)](https://dev.azure.com/projectriff/projectriff/_build/latest?definitionId=16&branchName=master)
 
 # cnab-riff
-A CNAB bundle for installing riff (experimental)
+A CNAB bundle for installing [riff](https://projectriff.io/)
 
 ## Getting started
 To install this cnab bundle, you can use any available cnab runtime. The following are installation instructions using [duffle](https://duffle.sh/).
