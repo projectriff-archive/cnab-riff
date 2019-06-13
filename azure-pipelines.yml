@@ -26,12 +26,12 @@ jobs:
     displayName: 'build bundle'
 
   - script: $(fatsDir)/start.sh
-    displayName: 'install and start minikube'
+    displayName: 'Start FATS'
 
   - script: |
       duffle credentials add ci/duffle-creds/k8s.yaml
       duffle install myriff riff --credentials k8s
-    displayName: 'duffle install'
+    displayName: 'Install riff'
 
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
@@ -42,6 +42,14 @@ jobs:
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'diagnostics'
+
+  - bash: duffle uninstall myriff --credentials k8s
+    condition: always()
+    displayName: 'Uninstall riff'
+
+  - bash: $(fatsDir)/cleanup.sh
+    condition: always()
+    displayName: 'Cleanup FATS'
 
   - bash: |
       $(fatsDir)/install.sh gcloud
@@ -116,13 +124,11 @@ jobs:
     condition: failed()
     displayName: 'diagnostics'
 
-  - bash: |
-      duffle uninstall myriff --credentials k8s
-      source $(fatsDir)/cleanup.sh
-    env:
-      DOCKER_USERNAME: '$(DockerUsername)'
-      DOCKER_PASSWORD: '$(DockerPassword)'
-      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+  - bash: duffle uninstall myriff --credentials k8s
+    condition: always()
+    displayName: 'Uninstall riff'
+
+  - bash: $(fatsDir)/cleanup.sh
     condition: always()
     displayName: 'Cleanup FATS'
 
