@@ -14,14 +14,15 @@ jobs:
     CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
     NAMESPACE: 'riff-$(Build.BuildId)-minikube'
   steps:
-  - template: ci/fetch-fats-step.yml
+  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+    displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle
-    displayName: 'install tools'
+    displayName: 'Install tools'
   - script: duffle init && duffle build .
-    displayName: 'build bundle'
+    displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
   - script: |
@@ -29,13 +30,13 @@ jobs:
       duffle install myriff riff --credentials k8s
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
-    displayName: 'run fats'
+    displayName: 'Run tests'
     env:
       FATS_DIR: $(fatsDir)
       FATS_REFSPEC: $(fatsRefspec)
   - bash: ci/diagnostics.sh
     condition: failed()
-    displayName: 'diagnostics'
+    displayName: 'Collect diagnostics'
   - bash: duffle uninstall myriff --credentials k8s
     condition: always()
     displayName: 'Uninstall riff'
@@ -49,7 +50,8 @@ jobs:
     vmImage: 'ubuntu-16.04'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
-  - template: ci/fetch-fats-step.yml
+  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+    displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
@@ -84,17 +86,18 @@ jobs:
     NAMESPACE: '$(CLUSTER_NAME)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
-  - template: ci/fetch-fats-step.yml
+  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+    displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
-    displayName: 'install tools'
+    displayName: 'Install tools'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
   - bash: $(fatsDir)/start.sh
-    displayName: 'setup cluster'
+    displayName: 'Start FATS'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
   - bash: |
@@ -106,7 +109,7 @@ jobs:
       duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
-    displayName: 'install riff from cnab bundle'
+    displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
     env:
@@ -117,7 +120,7 @@ jobs:
       FATS_REFSPEC: $(fatsRefspec)
   - bash: ci/diagnostics.sh
     condition: failed()
-    displayName: 'diagnostics'
+    displayName: 'Collect diagnostics'
   - bash: duffle uninstall myriff --credentials k8s
     condition: always()
     displayName: 'Uninstall riff'
@@ -137,11 +140,12 @@ jobs:
       eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
   steps:
-  - template: ci/fetch-fats-step.yml
+  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+    displayName: 'Fetch FATS'
   - bash: $(fatsDir)/install.sh gcloud
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
     displayName: 'Install gcloud'
   - bash: ./ci/publish.sh release
-    displayName: 'Publish riff bundle'
+    displayName: 'Publish bundle'
   displayName: 'Publish'

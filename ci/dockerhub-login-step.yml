@@ -1,7 +1,0 @@
-steps:
-  - task: Docker@1
-    displayName: Dockerhub registry login
-    inputs:
-      command: login
-      containerregistrytype: Container Registry
-      dockerRegistryEndpoint: dockerhub
