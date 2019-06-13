@@ -11,10 +11,10 @@ jobs:
   variables:
     CLUSTER: minikube
     REGISTRY: minikube
-    CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
-    NAMESPACE: 'riff-$(Build.BuildId)-minikube'
+    CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
+    NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
   steps:
-  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+  - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh kubectl
@@ -50,7 +50,7 @@ jobs:
     vmImage: 'ubuntu-16.04'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
-  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+  - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh duffle
@@ -71,7 +71,7 @@ jobs:
         imageName: ubuntu-16.04
         qualifier: minikube
         cluster: minikube
-        registry: docker-daemon
+        registry: dockerhub
       gke:
         imageName: ubuntu-16.04
         qualifier: gke
@@ -82,11 +82,11 @@ jobs:
   variables:
     CLUSTER:  '$(cluster)'
     REGISTRY: '$(registry)'
-    CLUSTER_NAME: 'riff-$(Build.BuildId)-$(qualifier)'
+    CLUSTER_NAME: 'cnab-$(Build.BuildId)-$(qualifier)'
     NAMESPACE: '$(CLUSTER_NAME)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
-  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+  - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh kubectl
@@ -99,6 +99,8 @@ jobs:
   - bash: $(fatsDir)/start.sh
     displayName: 'Start FATS'
     env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
   - bash: |
       version=`cat VERSION`
@@ -125,6 +127,9 @@ jobs:
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
+    env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
     condition: always()
     displayName: 'Cleanup FATS'
   displayName: 'Test'
@@ -140,7 +145,7 @@ jobs:
       eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
   steps:
-  - bash: ./ci/git-repo-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
+  - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: $(fatsDir)/install.sh gcloud
     env:
