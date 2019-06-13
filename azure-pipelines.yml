@@ -142,23 +142,25 @@ jobs:
   dependsOn: test
   pool:
     vmImage: 'Ubuntu-16.04'
-
+  condition: |
+    and(
+      succeeded(),
+      ne(variables['Build.Reason'], 'PullRequest'),
+      or(
+        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+        startsWith(variables['Build.SourceBranch'], 'refs/heads/v'),
+      ),
+    )
   steps:
   - template: ci/fetch-fats-step.yml
-
-  - bash: |
-      $(fatsDir)/install.sh gcloud
-      ./ci/publish.sh snapshot
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/master')
+  - bash: $(fatsDir)/install.sh gcloud
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
+    displayName: 'Install gcloud'
+  - bash: ./ci/publish.sh snapshot
+    env:
       BUILD_NUMBER: '$(Build.BuildNumber)'
     displayName: 'Publish riff bundle snapshot'
-
-  - bash: |
-      $(fatsDir)/install.sh gcloud
-      ./ci/publish.sh release
+  - bash: ./ci/publish.sh release
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
-    env:
-      GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
     displayName: 'Publish riff bundle release'

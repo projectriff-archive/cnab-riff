@@ -25,8 +25,6 @@ fi
 
 dest_file="riff-bundle-${version}.json"
 
-gcloud auth activate-service-account --key-file <(echo $GCLOUD_CLIENT_SECRET | base64 --decode)
-
 gsutil cp -a public-read -n ${build_bucket}/${build_file} ${bucket}/${dest_file}
 gsutil cp -a public-read ${build_bucket}/${build_file} gs://projectriff/riff-cnab/snapshots/riff-bundle-`cat VERSION`.json
 gsutil cp -a public-read ${build_bucket}/${build_file} gs://projectriff/riff-cnab/snapshots/riff-bundle-latest.json
