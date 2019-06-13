@@ -145,7 +145,7 @@ jobs:
     and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master')
     )
   steps:
   - template: ci/fetch-fats-step.yml
