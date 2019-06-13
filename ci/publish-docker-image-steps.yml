@@ -1,4 +1,0 @@
-steps:
-- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-  - template: dockerhub-login-step.yml
-  - template: push-image-step.yml

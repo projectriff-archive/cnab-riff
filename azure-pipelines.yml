@@ -4,10 +4,10 @@ variables:
   fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
 
 jobs:
-- job: build
+- job: test-pr
   pool:
     vmImage: 'ubuntu-16.04'
-
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   variables:
     CLUSTER: minikube
     REGISTRY: minikube
@@ -51,19 +51,25 @@ jobs:
     condition: always()
     displayName: 'Cleanup FATS'
 
+- job: stage
+  pool:
+    vmImage: 'ubuntu-16.04'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  steps:
+  - template: ci/fetch-fats-step.yml
   - bash: |
+      $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
-      ./ci/publish-build.sh
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+      ./ci/stage-bundle.sh
     env:
+      DOCKER_USERNAME: '$(DockerUsername)'
+      DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       BUILD_NUMBER: '$(Build.BuildNumber)'
-    displayName: 'Publish riff cnab bundle'
-
-  - template: ci/publish-docker-image-steps.yml
+    displayName: 'Stage riff bundle'
 
 - job: test
-  dependsOn: build
+  dependsOn: stage
   strategy:
     matrix:
       minikube:
@@ -147,7 +153,7 @@ jobs:
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       BUILD_NUMBER: '$(Build.BuildNumber)'
-    displayName: 'Publish riff cnab bundle'
+    displayName: 'Publish riff bundle snapshot'
 
   - bash: |
       $(fatsDir)/install.sh gcloud
@@ -155,4 +161,4 @@ jobs:
     condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-    displayName: 'Publish riff cnab bundle'
+    displayName: 'Publish riff bundle release'
