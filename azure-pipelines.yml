@@ -13,7 +13,6 @@ jobs:
     REGISTRY: minikube
     CLUSTER_NAME: 'riff-$(Build.BuildId)-minikube'
     NAMESPACE: 'riff-$(Build.BuildId)-minikube'
-
   steps:
   - template: ci/fetch-fats-step.yml
   - bash: |
@@ -21,35 +20,29 @@ jobs:
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle
     displayName: 'install tools'
-
   - script: duffle init && duffle build .
     displayName: 'build bundle'
-
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
-
   - script: |
       duffle credentials add ci/duffle-creds/k8s.yaml
       duffle install myriff riff --credentials k8s
     displayName: 'Install riff'
-
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
     env:
       FATS_DIR: $(fatsDir)
       FATS_REFSPEC: $(fatsRefspec)
-
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'diagnostics'
-
   - bash: duffle uninstall myriff --credentials k8s
     condition: always()
     displayName: 'Uninstall riff'
-
   - bash: $(fatsDir)/cleanup.sh
     condition: always()
     displayName: 'Cleanup FATS'
+  displayName: 'Test PR'
 
 - job: stage
   pool:
@@ -66,6 +59,7 @@ jobs:
       DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
     displayName: 'Stage riff bundle'
+  displayName: 'Stage'
 
 - job: test
   dependsOn: stage
@@ -89,7 +83,6 @@ jobs:
     CLUSTER_NAME: 'riff-$(Build.BuildId)-$(qualifier)'
     NAMESPACE: '$(CLUSTER_NAME)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-
   steps:
   - template: ci/fetch-fats-step.yml
   - bash: |
@@ -100,22 +93,20 @@ jobs:
     displayName: 'install tools'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-
-  - bash: source $(fatsDir)/start.sh
+  - bash: $(fatsDir)/start.sh
     displayName: 'setup cluster'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-
   - bash: |
-      version="`cat VERSION`-$(Build.BuildNumber)"
-      file=riff-bundle-${version}.json
+      version=`cat VERSION`
+      commit=$(git rev-parse HEAD)
+      file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
-    displayName: 'install riff from cnab bundle'
+      duffle install myriff ${file} --bundle-is-file --credentials k8s
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
-
+    displayName: 'install riff from cnab bundle'
   - bash: ./ci/run-tests.sh
     displayName: 'run fats'
     env:
@@ -124,18 +115,16 @@ jobs:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
       FATS_DIR: $(fatsDir)
       FATS_REFSPEC: $(fatsRefspec)
-
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'diagnostics'
-
   - bash: duffle uninstall myriff --credentials k8s
     condition: always()
     displayName: 'Uninstall riff'
-
   - bash: $(fatsDir)/cleanup.sh
     condition: always()
     displayName: 'Cleanup FATS'
+  displayName: 'Test'
 
 - job: publish
   dependsOn: test
@@ -155,3 +144,4 @@ jobs:
     displayName: 'Install gcloud'
   - bash: ./ci/publish.sh release
     displayName: 'Publish riff bundle'
+  displayName: 'Publish'
