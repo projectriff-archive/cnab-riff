@@ -2,7 +2,7 @@
 variables:
   duffleVersion: '0.1.0-ralpha.5%2Benglishrose'
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: c7d87aedeac8772520459a527329976d6269fedd # projectriff/fats master as of 2019-05-31
+  fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
 
 jobs:
 - job: build
@@ -28,12 +28,7 @@ jobs:
       $(fatsDir)/install.sh riff
     displayName: 'install tools'
 
-  - script: sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-    displayName: 'Downgrade Docker'
-
-  - script: |
-      minikube config set embed-certs true # this ensures that ~/.minikube is not needed in invocation image
-      source $(fatsDir)/start.sh
+  - script: $(fatsDir)/start.sh
     displayName: 'install and start minikube'
 
   - script: |
@@ -97,12 +92,6 @@ jobs:
     displayName: 'install tools'
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-
-  - script: |
-      sudo apt-get update && sudo apt-get remove moby-engine moby-cli && sudo apt-get install docker.io=18.06.1-0ubuntu1.2~16.04.1
-      minikube config set embed-certs true
-    condition: eq(variables['CLUSTER'], 'minikube')
-    displayName: 'setup minikube'
 
   - bash: source $(fatsDir)/start.sh
     displayName: 'setup cluster'
