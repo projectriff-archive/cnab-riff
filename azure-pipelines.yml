@@ -29,8 +29,8 @@ jobs:
     displayName: 'install and start minikube'
 
   - script: |
-      duffle credentials add ci/myk8s.yaml
-      duffle install myriff riff --credentials myk8s
+      duffle credentials add ci/duffle-creds/k8s.yaml
+      duffle install myriff riff --credentials k8s
     displayName: 'duffle install'
 
   - bash: ./ci/run-tests.sh
@@ -97,8 +97,8 @@ jobs:
       version="`cat VERSION`-$(Build.BuildNumber)"
       file=riff-bundle-${version}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      duffle credentials add ci/myk8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials myk8s --insecure
+      duffle credentials add ci/duffle-creds/k8s.yaml
+      duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
     displayName: 'install riff from cnab bundle'
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
@@ -117,7 +117,7 @@ jobs:
     displayName: 'diagnostics'
 
   - bash: |
-      duffle uninstall myriff --credentials myk8s
+      duffle uninstall myriff --credentials k8s
       source $(fatsDir)/cleanup.sh
     env:
       DOCKER_USERNAME: '$(DockerUsername)'
