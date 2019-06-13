@@ -1,6 +1,5 @@
 
 variables:
-  duffleVersion: '0.1.0-ralpha.5%2Benglishrose'
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
   fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
 
@@ -17,16 +16,14 @@ jobs:
 
   steps:
   - template: ci/fetch-fats-step.yml
-  - template: ci/install-duffle-step.yml
+  - bash: |
+      $(fatsDir)/install.sh kubectl
+      $(fatsDir)/install.sh riff
+      $(fatsDir)/install.sh duffle
+    displayName: 'install tools'
 
   - script: duffle init && duffle build .
     displayName: 'build bundle'
-
-  - bash: |
-      $(fatsDir)/install.sh kubectl
-      $(fatsDir)/install.sh minikube
-      $(fatsDir)/install.sh riff
-    displayName: 'install tools'
 
   - script: $(fatsDir)/start.sh
     displayName: 'install and start minikube'
@@ -82,12 +79,10 @@ jobs:
 
   steps:
   - template: ci/fetch-fats-step.yml
-  - template: ci/install-duffle-step.yml
-
   - bash: |
       $(fatsDir)/install.sh kubectl
-      $(fatsDir)/install.sh minikube
       $(fatsDir)/install.sh riff
+      $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
     displayName: 'install tools'
     env:
