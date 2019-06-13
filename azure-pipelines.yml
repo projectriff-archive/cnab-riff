@@ -65,7 +65,6 @@ jobs:
       DOCKER_USERNAME: '$(DockerUsername)'
       DOCKER_PASSWORD: '$(DockerPassword)'
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
-      BUILD_NUMBER: '$(Build.BuildNumber)'
     displayName: 'Stage riff bundle'
 
 - job: test
@@ -146,10 +145,7 @@ jobs:
     and(
       succeeded(),
       ne(variables['Build.Reason'], 'PullRequest'),
-      or(
-        eq(variables['Build.SourceBranch'], 'refs/heads/master'),
-        startsWith(variables['Build.SourceBranch'], 'refs/heads/v'),
-      ),
+      eq(variables['Build.SourceBranch'], 'refs/heads/master'),
     )
   steps:
   - template: ci/fetch-fats-step.yml
@@ -157,10 +153,5 @@ jobs:
     env:
       GCLOUD_CLIENT_SECRET: '$(GcloudClientSecret)'
     displayName: 'Install gcloud'
-  - bash: ./ci/publish.sh snapshot
-    env:
-      BUILD_NUMBER: '$(Build.BuildNumber)'
-    displayName: 'Publish riff bundle snapshot'
   - bash: ./ci/publish.sh release
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/v')
-    displayName: 'Publish riff bundle release'
+    displayName: 'Publish riff bundle'
