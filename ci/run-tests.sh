@@ -16,7 +16,7 @@ wait_for_ingress_ready 'istio-ingressgateway' 'istio-system'
 kubectl create namespace $NAMESPACE
 fats_create_push_credentials $NAMESPACE
 
-for test in command; do
+for test in java java-boot node npm command; do
   path="$FATS_DIR/functions/uppercase/${test}"
   function_name=fats-cluster-uppercase-${test}
   image=$(fats_image_repo ${function_name})
