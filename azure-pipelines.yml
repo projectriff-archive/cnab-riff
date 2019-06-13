@@ -4,7 +4,7 @@ variables:
   fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
 
 jobs:
-- job: test-pr
+- job: test_pr
   pool:
     vmImage: 'ubuntu-16.04'
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
