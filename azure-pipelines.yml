@@ -103,7 +103,7 @@ jobs:
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials k8s
+      duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'install riff from cnab bundle'
