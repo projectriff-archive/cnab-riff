@@ -25,9 +25,7 @@ jobs:
     displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
-  - script: |
-      duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff riff --credentials k8s
+  - bash: KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -d k8s
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'Run tests'
@@ -37,7 +35,7 @@ jobs:
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'Collect diagnostics'
-  - bash: duffle uninstall myriff --credentials k8s
+  - bash: duffle uninstall myriff -d k8s
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
@@ -107,8 +105,7 @@ jobs:
       commit=$(git rev-parse HEAD)
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials k8s
+      KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -d k8s
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
@@ -123,7 +120,7 @@ jobs:
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'Collect diagnostics'
-  - bash: duffle uninstall myriff --credentials k8s
+  - bash: duffle uninstall myriff -d k8s
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
