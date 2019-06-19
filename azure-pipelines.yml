@@ -25,7 +25,7 @@ jobs:
     displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
-  - bash: KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -d k8s
+  - bash: KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'Run tests'
@@ -105,7 +105,7 @@ jobs:
       commit=$(git rev-parse HEAD)
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -d k8s
+      KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
