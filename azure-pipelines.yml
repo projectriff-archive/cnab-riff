@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
+  fatsRefspec: 8fe44c5cd52ce9ba83a2a36a828636f77d7fa29a # projectriff/fats master as of 2019-06-19
 
 jobs:
 - job: test_pr
@@ -19,7 +19,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1
     displayName: 'Install tools'
   - script: duffle init && duffle build .
     displayName: 'Build bundle'
@@ -53,7 +53,7 @@ jobs:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1
       $(fatsDir)/install.sh gcloud
       ./ci/stage-bundle.sh
     env:
@@ -91,7 +91,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1
       $(fatsDir)/install.sh gcloud
     displayName: 'Install tools'
     env:
@@ -108,7 +108,7 @@ jobs:
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
+      duffle install myriff ${file} --bundle-is-file --credentials k8s
     env:
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
