@@ -28,7 +28,7 @@ jobs:
   - bash: |
       kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
       kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
-      duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
+      duffle install myriff riff -s node_port=true -d k8s
     env:
       KUBE_NAMESPACE: kube-system
       SERVICE_ACCOUNT: duffle-runtime
