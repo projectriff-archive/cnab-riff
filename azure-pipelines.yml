@@ -26,9 +26,12 @@ jobs:
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
   - bash: |
-      kubectl create clusterrole crd-creator --verb=get,list,create --resource=customresourcedefinitions.apiextensions.k8s.io
-      kubectl create clusterrolebinding crd-creator-binding --clusterrole=crd-creator --serviceaccount=default:default
-      KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
+      kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
+      kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+      duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
+    env:
+      KUBE_NAMESPACE: kube-system
+      SERVICE_ACCOUNT: duffle-runtime
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'Run tests'
@@ -108,10 +111,12 @@ jobs:
       commit=$(git rev-parse HEAD)
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      kubectl create clusterrole crd-creator --verb=get,list,create --resource=customresourcedefinitions.apiextensions.k8s.io
-      kubectl create clusterrolebinding crd-creator-binding --clusterrole=crd-creator --serviceaccount=default:default
-      KUBE_NAMESPACE=default SERVICE_ACCOUNT=default duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
+      kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
+      kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+      duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
     env:
+      KUBE_NAMESPACE: kube-system
+      SERVICE_ACCOUNT: duffle-runtime
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
