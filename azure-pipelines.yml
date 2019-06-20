@@ -15,6 +15,7 @@ jobs:
     REGISTRY: minikube
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
     NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
+    NODE_PORT: 'true'
   steps:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
@@ -30,7 +31,7 @@ jobs:
   - bash: |
       kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
       kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
-      duffle install myriff riff -s node_port=true -d k8s
+      duffle install myriff riff -s node_port=${NODE_PORT} -d k8s
     env:
       KUBE_NAMESPACE: '$(duffleNamespace)'
       SERVICE_ACCOUNT: '$(duffleServiceAccount)'
@@ -81,11 +82,13 @@ jobs:
         qualifier: minikube
         cluster: minikube
         registry: dockerhub
+        nodePort: 'true'
       gke:
         imageName: ubuntu-16.04
         qualifier: gke
         cluster: gke
         registry: gcr
+        nodePort: 'false'
   pool:
     vmImage: $(imageName)
   variables:
@@ -93,6 +96,7 @@ jobs:
     REGISTRY: '$(registry)'
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-$(qualifier)'
     NAMESPACE: '$(CLUSTER_NAME)'
+    NODE_PORT: '$(nodePort)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
@@ -118,7 +122,7 @@ jobs:
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
       kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
       kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
-      duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
+      duffle install myriff ${file} --bundle-is-file -s node_port=${NODE_PORT} -d k8s
     env:
       KUBE_NAMESPACE: '$(duffleNamespace)'
       SERVICE_ACCOUNT: '$(duffleServiceAccount)'
