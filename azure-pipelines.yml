@@ -2,6 +2,8 @@
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
   fatsRefspec: 8fe44c5cd52ce9ba83a2a36a828636f77d7fa29a # projectriff/fats master as of 2019-06-19
+  duffleNamespace: kube-system
+  duffleServiceAccount: duffle-runtime
 
 jobs:
 - job: test_pr
@@ -30,8 +32,8 @@ jobs:
       kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
       duffle install myriff riff -s node_port=true -d k8s
     env:
-      KUBE_NAMESPACE: kube-system
-      SERVICE_ACCOUNT: duffle-runtime
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'Run tests'
@@ -42,6 +44,9 @@ jobs:
     condition: failed()
     displayName: 'Collect diagnostics'
   - bash: duffle uninstall myriff -d k8s
+    env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
@@ -115,8 +120,8 @@ jobs:
       kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
       duffle install myriff ${file} --bundle-is-file -s node_port=true -d k8s
     env:
-      KUBE_NAMESPACE: kube-system
-      SERVICE_ACCOUNT: duffle-runtime
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
@@ -131,6 +136,9 @@ jobs:
     condition: failed()
     displayName: 'Collect diagnostics'
   - bash: duffle uninstall myriff -d k8s
+    env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
