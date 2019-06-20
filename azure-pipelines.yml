@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: 8fe44c5cd52ce9ba83a2a36a828636f77d7fa29a # projectriff/fats master as of 2019-06-19
+  fatsRefspec: 7d0c89c23c21edacd8bbd5ed596bbf93006b2846 # do not merge with this refspec
   duffleNamespace: kube-system
   duffleServiceAccount: duffle-runtime
 
@@ -21,7 +21,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1%2Bgcp https://storage.googleapis.com/projectriff/internal/duffle/
     displayName: 'Install tools'
   - script: duffle init && duffle build .
     displayName: 'Build bundle'
