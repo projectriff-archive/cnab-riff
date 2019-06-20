@@ -21,7 +21,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1%2Bgcp https://storage.googleapis.com/projectriff/internal/duffle/
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle/
     displayName: 'Install tools'
   - script: duffle init && duffle build .
     displayName: 'Build bundle'
@@ -62,7 +62,7 @@ jobs:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1%2Bgcp https://storage.googleapis.com/projectriff/internal/duffle/
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle/
       $(fatsDir)/install.sh gcloud
       ./ci/stage-bundle.sh
     env:
@@ -100,7 +100,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1%2Bgcp https://storage.googleapis.com/projectriff/internal/duffle/
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle/
       $(fatsDir)/install.sh gcloud
     displayName: 'Install tools'
     env:
