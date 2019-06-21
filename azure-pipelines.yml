@@ -1,7 +1,9 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: a875da0492680d255d8f7a10502550129b5c13f3 # projectriff/fats master as of 2019-06-06
+  fatsRefspec: dac0129e000dd711a74202ba95d6b547e64d8f66 # projectriff/fats master as of 2019-06-20
+  duffleNamespace: kube-system
+  duffleServiceAccount: duffle-runtime
 
 jobs:
 - job: test_pr
@@ -13,21 +15,26 @@ jobs:
     REGISTRY: minikube
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
     NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
+    NODE_PORT: 'true'
   steps:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle
     displayName: 'Install tools'
   - script: duffle init && duffle build .
     displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
-  - script: |
-      duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff riff --credentials k8s
+  - bash: |
+      kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
+      kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+      duffle install myriff riff -s node_port=${NODE_PORT} -d k8s
+    env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
     displayName: 'Run tests'
@@ -37,7 +44,10 @@ jobs:
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'Collect diagnostics'
-  - bash: duffle uninstall myriff --credentials k8s
+  - bash: duffle uninstall myriff -d k8s
+    env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh
@@ -53,7 +63,7 @@ jobs:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle
       $(fatsDir)/install.sh gcloud
       ./ci/stage-bundle.sh
     env:
@@ -72,11 +82,13 @@ jobs:
         qualifier: minikube
         cluster: minikube
         registry: dockerhub
+        nodePort: 'true'
       gke:
         imageName: ubuntu-16.04
         qualifier: gke
         cluster: gke
         registry: gcr
+        nodePort: 'false'
   pool:
     vmImage: $(imageName)
   variables:
@@ -84,6 +96,7 @@ jobs:
     REGISTRY: '$(registry)'
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-$(qualifier)'
     NAMESPACE: '$(CLUSTER_NAME)'
+    NODE_PORT: '$(nodePort)'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
@@ -91,7 +104,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle
+      $(fatsDir)/install.sh duffle 0.2.0-beta.1-auth https://storage.googleapis.com/projectriff/internal/duffle
       $(fatsDir)/install.sh gcloud
     displayName: 'Install tools'
     env:
@@ -107,9 +120,12 @@ jobs:
       commit=$(git rev-parse HEAD)
       file=riff-bundle-${version}-${commit}.json
       curl -O https://storage.googleapis.com/projectriff/riff-cnab/builds/${file}
-      duffle credentials add ci/duffle-creds/k8s.yaml
-      duffle install myriff ${file} --bundle-is-file --credentials k8s --insecure
+      kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
+      kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+      duffle install myriff ${file} --bundle-is-file -s node_port=${NODE_PORT} -d k8s
     env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
       COMPOSE_CONVERT_WINDOWS_PATHS: 1
     displayName: 'Install riff'
   - bash: ./ci/run-tests.sh
@@ -123,7 +139,10 @@ jobs:
   - bash: ci/diagnostics.sh
     condition: failed()
     displayName: 'Collect diagnostics'
-  - bash: duffle uninstall myriff --credentials k8s
+  - bash: duffle uninstall myriff -d k8s
+    env:
+      KUBE_NAMESPACE: '$(duffleNamespace)'
+      SERVICE_ACCOUNT: '$(duffleServiceAccount)'
     condition: always()
     displayName: 'Uninstall riff'
   - bash: $(fatsDir)/cleanup.sh

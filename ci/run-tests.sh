@@ -7,7 +7,6 @@ set -o pipefail
 fats_repo="projectriff/fats"
 source $FATS_DIR/.configure.sh
 source $FATS_DIR/functions/helpers.sh
-$FATS_DIR/install.sh kail
 
 echo "Checking for ready ingress"
 wait_for_ingress_ready 'istio-ingressgateway' 'istio-system'
