@@ -9,39 +9,30 @@ To install this cnab bundle, you can use any available cnab runtime. The followi
 ### Steps
 1. Download the latest duffle release for your operating system from duffle's [release page](https://github.com/deislabs/duffle/releases),
  put it somewhere on your path, and make it executable using, for example, `chmod +x /usr/local/bin/duffle`.
-1. Start a kubernetes cluster as described in the riff [getting started](https://projectriff.io/docs/getting-started/) documentation,
-but stop once you've created a cluster and, if appropriate, given yourself cluster-admin permissions.
- If using `minikube`, please run the following command before starting `minikube`:
-    ```
-    minikube config set embed-certs true
-    ```
-1. Check that your kubeconfig file is configured to talk to that cluster:
-    ```
-    kubectl config current-context
-    ```
+1. Start a ***local*** kubernetes cluster (minikube OR docker-for-desktop) by following the instructions in [getting started](https://projectriff.io/docs/getting-started/minikube/).
  
-1. Add a duffle credential to allow this bundle to talk to your kubernetes cluster.
-    * Create a file named `myk8s.yaml` with the following content:
-     ```
-     name: myk8s
-     credentials:
-     - name: kubeconfig
-       source:
-         path: $HOME/.kube/config
-     ```
-    * Create a duffle credential using the above file:
-     ```
-     duffle credentials add myk8s.yaml
-     ```
 1. Download the latest snapshot of the bundle file:
     ```
     curl -O https://storage.googleapis.com/projectriff/riff-cnab/snapshots/riff-bundle-latest.json
     ```
+1. Create a service account for installing riff
+    ```
+    export SERVICE_ACCOUNT=duffle-runtime
+    export KUBE_NAMESPACE=kube-system
+    kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
+    kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+    ```
 1. Install riff
     ```
-    duffle install myriff riff-bundle-latest.json --bundle-is-file --credentials myk8s --insecure
+    duffle install myriff riff-bundle-latest.json --bundle-is-file -s node_port=true -d k8s
     ```
 1. You should now be able to see riff components installed on your kubernetes cluster:
     ```
     kubectl get pods --all-namespaces
     ```
+
+## Uninstall
+To uninstall, set the SERVICE_ACCOUNT and KUBE_NAMESPACE environment variables as above and use the below command:
+```
+duffle uninstall myriff -d k8s
+```
