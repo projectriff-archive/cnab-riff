@@ -28,7 +28,7 @@
                 "description": "absolute path to the manifest file"
             },
             "destination": {
-                "env:": "MANIFEST_FILE"
+                "env": "MANIFEST_FILE"
             },
             "default": "/cnab/app/kab/manifest.yaml"
         },
@@ -38,7 +38,7 @@
                 "description": "one of logrus log level values"
             },
             "destination": {
-                "env:": "LOG_LEVEL"
+                "env": "LOG_LEVEL"
             },
             "default": "info"
         },
