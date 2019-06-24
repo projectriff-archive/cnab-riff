@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: 270f1ffeddb9901aa56535e92837e7130c6d2ca3 # projectriff/fats master as of 2019-06-21
+  fatsRefspec: 9304dda193c6d1176354164d2d29f8888593a33c # projectriff/fats master as of 2019-06-21
   duffleNamespace: kube-system
   duffleServiceAccount: duffle-runtime
 
@@ -79,6 +79,11 @@ jobs:
       gke:
         imageName: ubuntu-16.04
         qualifier: gke
+        cluster: gke
+        registry: gcr
+      windows:
+        imageName: windows-2019
+        qualifier: windows
         cluster: gke
         registry: gcr
   pool:
