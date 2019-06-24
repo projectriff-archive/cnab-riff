@@ -9,7 +9,7 @@ To install this cnab bundle, you can use any available cnab runtime. The followi
 ### Steps
 1. Download the latest duffle release for your operating system from duffle's [release page](https://github.com/deislabs/duffle/releases),
  put it somewhere on your path, and make it executable using, for example, `chmod +x /usr/local/bin/duffle`.
-1. Start a ***local*** kubernetes cluster (minikube OR docker-for-desktop) by following the instructions in [getting started](https://projectriff.io/docs/getting-started/minikube/).
+1. Start a kubernetes cluster that does not need resources other than kubeconfig for authentication (like minikube OR docker-for-desktop) by following the instructions in [getting started](https://projectriff.io/docs/getting-started/minikube/).
  
 1. Download the latest snapshot of the bundle file:
     ```
@@ -26,6 +26,8 @@ To install this cnab bundle, you can use any available cnab runtime. The followi
     ```
     duffle install myriff riff-bundle-latest.json --bundle-is-file -s node_port=true -d k8s
     ```
+    where `node_port=true` parameter changes all service types to NodePort from LoadBalancer 
+    and `-d k8s` uses the duffle kubernetes driver to run the installer image in kubernetes cluster
 1. You should now be able to see riff components installed on your kubernetes cluster:
     ```
     kubectl get pods --all-namespaces
