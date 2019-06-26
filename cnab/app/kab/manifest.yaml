@@ -6,7 +6,7 @@ metadata:
 spec:
   resources:
   - name: istio
-    path: https://storage.googleapis.com/projectriff/istio/istio-v1.1.7-lean.yaml
+    path: https://storage.googleapis.com/projectriff/istio/istio-v1.1.7-lean-riff.yaml
   - name: knative-build
     path: https://storage.googleapis.com/knative-releases/build/previous/v0.7.0/build.yaml
   - name: knative-serving
