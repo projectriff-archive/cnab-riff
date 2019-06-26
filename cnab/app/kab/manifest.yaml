@@ -8,9 +8,9 @@ spec:
   - name: istio
     path: https://storage.googleapis.com/projectriff/istio/istio-v1.1.7-lean.yaml
   - name: knative-build
-    path: https://storage.googleapis.com/knative-releases/build/previous/v0.6.0/build.yaml
+    path: https://storage.googleapis.com/knative-releases/build/previous/v0.7.0/build.yaml
   - name: knative-serving
-    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.6.0/serving.yaml
+    path: https://storage.googleapis.com/knative-releases/serving/previous/v0.7.0/serving.yaml
   - name: riff-system
     path: https://storage.googleapis.com/projectriff/riff-system/riff-system-0.1.0-snapshot.yaml
   - name: riff-application-build-template
