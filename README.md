@@ -36,7 +36,7 @@ Follow the steps below for your choice of kubernetes cluster
     ```
     duffle install myriff https://storage.googleapis.com/projectriff/riff-cnab/snapshots/riff-bundle-latest.json --bundle-is-file -s node_port=true -d k8s
     ```
-    where `node_port=true` parameter changes all service types to NodePort from LoadBalancer
+    where `-s node_port=true` parameter changes all service types to NodePort from LoadBalancer
     and `-d k8s` uses the duffle kubernetes driver to run the installer image in kubernetes cluster
 1. You should now be able to see riff components installed on your kubernetes cluster:
     ```
