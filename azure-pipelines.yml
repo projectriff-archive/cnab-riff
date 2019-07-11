@@ -96,6 +96,7 @@ jobs:
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle 0.2.0-beta.1-schema
+      echo "####Duffle version: `duffle version`"
       $(fatsDir)/install.sh gcloud
     displayName: 'Install tools'
     env:
