@@ -10,7 +10,7 @@
         {
             "name": "Swapnil Bawaskar",
             "email": "sbawaska@pivotal.io",
-            "url": "https://example.com"
+            "url": "https://projectriff.io"
         }
     ],
     "invocationImages": {
@@ -22,34 +22,45 @@
             }
         }
     },
-    "parameters": {
+    "definitions": {
         "manifest_file": {
-            "type": "string",
-            "metadata": {
-                "description": "absolute path to the manifest file"
-            },
-            "destination": {
-                "env:": "MANIFEST_FILE"
-            },
-            "default": "/cnab/app/kab/manifest.yaml"
+            "default": "/cnab/app/kab/manifest.yaml",
+            "type": "string"
         },
         "log_level": {
-            "type": "string",
-            "metadata": {
-                "description": "one of logrus log level values"
-            },
-            "destination": {
-                "env:": "LOG_LEVEL"
-            },
-            "default": "info"
+            "default": "info",
+            "type": "string"
         },
         "node_port": {
-            "type": "bool",
-            "metadata": {
-                "description": "access kubernetes services via NodePort rather than LoadBalancer."
+            "default": "false",
+            "type": "boolean"
+        }
+    },
+    "parameters": {
+        "fields": {
+            "manifest_file": {
+                "applyTo": ["install"],
+                "definition": "manifest_file",
+                "destination": {
+                    "env": "MANIFEST_FILE"
+                },
+                "description": "absolute path to the manifest file"
             },
-            "destination": {
-                "env": "NODE_PORT"
+            "log_level": {
+                "applyTo": "install",
+                "definition": "log_level",
+                "destination": {
+                    "env": "LOG_LEVEL"
+                },
+                "description": "one of logrus log level values"
+            },
+            "node_port": {
+                "applyTo": "install",
+                "definition": "node_port",
+                "destination": {
+                    "env": "NODE_PORT"
+                },
+                "description": "access kubernetes services via NodePort rather than LoadBalancer."
             }
         }
     }
