@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: 270f1ffeddb9901aa56535e92837e7130c6d2ca3 # projectriff/fats master as of 2019-06-21
+  fatsRefspec: 7ac6066561bf3a4949295656f9303e0ac2214aab # projectriff/fats master as of 2019-07-11
   duffleNamespace: kube-system
   duffleServiceAccount: duffle-runtime
 
@@ -21,7 +21,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1-schema
+      $(fatsDir)/install.sh duffle
     displayName: 'Install tools'
   - script: duffle init && duffle build .
     displayName: 'Build bundle'
@@ -57,7 +57,7 @@ jobs:
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1-schema
+      $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
       ./ci/stage-bundle.sh
     env:
@@ -95,7 +95,7 @@ jobs:
   - bash: |
       $(fatsDir)/install.sh kubectl
       $(fatsDir)/install.sh riff
-      $(fatsDir)/install.sh duffle 0.2.0-beta.1-schema
+      $(fatsDir)/install.sh duffle
       $(fatsDir)/install.sh gcloud
     displayName: 'Install tools'
     env:
