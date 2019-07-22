@@ -13,6 +13,7 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/pivotal/go-ape/pkg/furl"
 	"github.com/pivotal/image-relocation/pkg/image"
+	"github.com/pivotal/image-relocation/pkg/registry"
 	"github.com/projectriff/cnab-k8s-installer-base/pkg/apis/kab/v1alpha1"
 	"github.com/projectriff/k8s-manifest-scanner/pkg/scan"
 )
@@ -38,6 +39,7 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 	}
 
 	mfst.Images = map[string]bundle.Image{}
+	r := registry.NewRegistryClient()
 	for _, img := range images {
 		name, err := image.NewName(img)
 		if err != nil {
@@ -46,7 +48,11 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		n := strings.ReplaceAll(name.String(), "/", "_")
 		bunImg := bundle.Image{}
 		bunImg.Image = name.String()
-		bunImg.Digest = name.Digest().String()
+		d, err := r.Digest(name)
+		if err != nil {
+			return err
+		}
+		bunImg.Digest = d.String()
 		mfst.Images[n] = bunImg
 	}
 
