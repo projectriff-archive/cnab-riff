@@ -25,3 +25,6 @@ install: build
 
 build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
+
+bundle: build
+	@./bin/finalize-bundle
