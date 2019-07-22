@@ -21,7 +21,7 @@ import (
 // 2. adds images to duffle.json by scanning the resource content
 // 3. computes digests for images
 // 4. replaces image references in kab manifest with digested references
-func FinalizeBundle(bundlePath, kabManifestPath string) error {
+func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath string) error {
 	mfst := &manifest.Manifest{}
 	err := unmarshallFile(bundlePath, mfst)
 	if err != nil {
@@ -81,7 +81,7 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		return err
 	}
 
-	err = marshallYamlFile(kabManifestPath, kabMfst)
+	err = marshallYamlFile(kabManifestDestinationPath, kabMfst)
 	return err
 
 }
