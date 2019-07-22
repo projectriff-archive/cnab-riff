@@ -10,7 +10,6 @@ import (
 	"github.com/deislabs/cnab-go/bundle"
 	"github.com/deislabs/duffle/pkg/duffle/manifest"
 	"github.com/ghodss/yaml"
-	"github.com/pivotal/go-ape/pkg/furl"
 	"github.com/pivotal/image-relocation/pkg/image"
 	"github.com/pivotal/image-relocation/pkg/registry"
 	"github.com/projectriff/cnab-k8s-installer-base/pkg/apis/kab/v1alpha1"
@@ -29,18 +28,24 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		return err
 	}
 
-	err = InlineContentInKabManifest(kabManifestPath)
+	kabMfst := &v1alpha1.Manifest{}
+	err = unmarshallFile(kabManifestPath, kabMfst)
 	if err != nil {
 		return err
 	}
 
-	images, err := GetImagesFromKabManifest(kabManifestPath)
+	err = kabMfst.InlineContent()
+	if err != nil {
+		return err
+	}
+
+	images, err := GetImagesFromKabManifest(kabMfst)
 	if err != nil {
 		return err
 	}
 
 	mfst.Images = map[string]bundle.Image{}
-	r := registry.NewRegistryClient()
+	registryClient := registry.NewRegistryClient()
 	replacements := []string{}
 
 	for _, img := range images {
@@ -48,19 +53,20 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		if err != nil {
 			fmt.Printf("err %v\n", err)
 		}
-		n := strings.ReplaceAll(name.String(), "/", "_")
-		bunImg := bundle.Image{}
-		d, err := r.Digest(name)
+		bundleImageKey := strings.ReplaceAll(name.String(), "/", "_")
+		bundleImage := bundle.Image{}
+		mfst.Images[bundleImageKey] = bundleImage
+
+		digest, err := registryClient.Digest(name)
 		if err != nil {
 			return err
 		}
-		bunImg.Digest = d.String()
-		nameWithDigest, err := name.WithDigest(d)
+		bundleImage.Digest = digest.String()
+		nameWithDigest, err := name.WithDigest(digest)
 		if err != nil {
 			return err
 		}
-		bunImg.Image = nameWithDigest.String()
-		mfst.Images[n] = bunImg
+		bundleImage.Image = nameWithDigest.String()
 
 		replacements = append(replacements, img, nameWithDigest.String())
 	}
@@ -70,8 +76,12 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		return err
 	}
 
-	err = ReplaceInKabManifest(kabManifestPath, *strings.NewReplacer(replacements...))
+	err = ReplaceInKabManifest(kabMfst, *strings.NewReplacer(replacements...))
+	if err != nil {
+		return err
+	}
 
+	err = marshallYamlFile(kabManifestPath, kabMfst)
 	return err
 
 }
@@ -117,16 +127,11 @@ func writeFile(path string, str interface{}, content []byte) error {
 	return nil
 }
 
-func GetImagesFromKabManifest(kabManifestPath string) ([]string, error) {
-	kabMfst := &v1alpha1.Manifest{}
-	err := unmarshallFile(kabManifestPath, kabMfst)
-	if err != nil {
-		return nil, err
-	}
+func GetImagesFromKabManifest(kabMfst *v1alpha1.Manifest) ([]string, error) {
 
 	images := []string{}
 
-	err = kabMfst.VisitResources(func(res v1alpha1.KabResource) error {
+	err := kabMfst.VisitResources(func(res v1alpha1.KabResource) error {
 		fmt.Fprintf(os.Stderr, "Scanning %s\n", res.Name)
 
 		var err error
@@ -144,45 +149,16 @@ func GetImagesFromKabManifest(kabManifestPath string) ([]string, error) {
 
 		return nil
 	})
-	return images, nil
+	return images, err
 }
 
-func InlineContentInKabManifest(kabManifestPath string) error {
-	kabMfst := &v1alpha1.Manifest{}
-	err := unmarshallFile(kabManifestPath, kabMfst)
-	if err != nil {
-		return err
-	}
+func ReplaceInKabManifest(kabMfst *v1alpha1.Manifest, replacer strings.Replacer) error {
 
-	err = kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
-		contentBytes, err := furl.Read(res.Path, "")
-		if err != nil {
-			return "", err
-		}
-		return string(contentBytes), nil
-	})
-	if err != nil {
-		return err
-	}
-
-	err = marshallYamlFile(kabManifestPath, kabMfst)
-	return err
-}
-
-func ReplaceInKabManifest(kabManifestPath string, replacer strings.Replacer) error {
-	kabMfst := &v1alpha1.Manifest{}
-	err := unmarshallFile(kabManifestPath, kabMfst)
-	if err != nil {
-		return err
-	}
-
-	err = kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
+	err := kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
 		return replacer.Replace(res.Content), nil
 	})
 	if err != nil {
 		return err
 	}
-
-	err = marshallYamlFile(kabManifestPath, kabMfst)
 	return err
 }
