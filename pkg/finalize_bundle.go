@@ -2,7 +2,6 @@ package cnab_riff
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -47,12 +46,16 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		}
 		n := strings.ReplaceAll(name.String(), "/", "_")
 		bunImg := bundle.Image{}
-		bunImg.Image = name.String()
 		d, err := r.Digest(name)
 		if err != nil {
 			return err
 		}
 		bunImg.Digest = d.String()
+		nameWithDigest, err := name.WithDigest(d)
+		if err != nil {
+			return err
+		}
+		bunImg.Image = nameWithDigest.String()
 		mfst.Images[n] = bunImg
 	}
 
@@ -140,9 +143,6 @@ func InlineContentInKabManifest(kabManifestPath string) error {
 	}
 
 	err = kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
-		if res.Content != "" {
-			return "", errors.New(fmt.Sprintf("content not empty for resource: %s", res.Name))
-		}
 		contentBytes, err := furl.Read(res.Path, "")
 		if err != nil {
 			return "", err
