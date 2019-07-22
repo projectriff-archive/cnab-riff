@@ -1,7 +1,7 @@
 {
     "name": "riff",
-    "schemaVersion": "v1.0.0-WD",
     "version": "0.1.0",
+    "schemaVersion": "v1.0.0-WD",
     "description": "Installs riff",
     "keywords": [
         "riff"
@@ -22,46 +22,159 @@
             }
         }
     },
-    "definitions": {
-        "manifest_file": {
-            "default": "/cnab/app/kab/manifest.yaml",
-            "type": "string"
+    "images": {
+        "docker.io_cloudfoundry_cnb:0.0.5-bionic": {
+            "imageType": "",
+            "image": "",
+            "description": ""
         },
+        "docker.io_istio_node-agent-k8s:1.1.7": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "docker.io_istio_pilot:1.1.7": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "docker.io_istio_proxyv2:1.1.7": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "docker.io_library_ubuntu:18.04": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "docker.io_projectriff_builder:0.3.0-snapshot": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_cloud-builders_gcs-fetcher": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_build_cmd_controller@sha256:5adb5ba0647a7b1af1d90848bf72a75fa84efeb89e1d688465a2105c1cce1dc2": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_build_cmd_creds-init@sha256:1a984c032a2606f8491f4a19a85209dcc1ae2cfd494c3dafe8a74269379ad2c8": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_build_cmd_git-init@sha256:06505d8c621e9337d0dd1bc13ed4545a33e857fbb6374740cc6337d2ba55796d": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_build_cmd_nop@sha256:8aca9c97ede9a550ac3536d00c5d7acaae5e3a4fe514f4329ec261d935eddabb": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_build_cmd_webhook@sha256:35b1b5f72642e9c1ee71809fec309a019111beebf805f9ddddf154a97ad23975": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_activator@sha256:57fe5f1a8b1d12f29fe9e3a904b00c7219e5ce5825d94f33339db929e92257db": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_autoscaler@sha256:2c2370df2751741348e1cc456f31425cb2455c377ddb45d3f6c17e743fd63d78": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_controller@sha256:016c95f2d94be89683d1ddb7ea959667fd2d899087a4145a31d26b5d6f0bb38f": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_networking_certmanager@sha256:c757629165393f778d5c0e8b611c9c4857b24f0c748d985d3a080d0161a85248": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_networking_istio@sha256:bb4407e4714511cd9429e86536c283265629a2c11c80633d91c0f798c494a16f": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_queue@sha256:e007c0a78c541600466f88954deee65c517246a23345bfba45a7f212d09b8f3b": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_knative-releases_github.com_knative_serving_cmd_webhook@sha256:d9918d40492e0b20b48576ff6182e2ab896e50dfd2313cb471419be98f821b9c": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_projectriff_system_github.com_projectriff_system_cmd_controller@sha256:c4d546d44504fc33d0d6acb8a1e111475f21f43eaad5871eca9d1e1a9a283fd0": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        },
+        "gcr.io_projectriff_system_github.com_projectriff_system_cmd_webhook@sha256:f395749cf7e47ebc304c7cd03b8b597da5318a3c66e1c6b6e5da2ab71f487db3": {
+            "imageType": "",
+            "image": "",
+            "description": ""
+        }
+    },
+    "parameters": {
+        "fields": {
+            "log_level": {
+                "definition": "log_level",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "one of logrus log level values",
+                "destination": {
+                    "env": "LOG_LEVEL"
+                }
+            },
+            "manifest_file": {
+                "definition": "manifest_file",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "absolute path to the manifest file",
+                "destination": {
+                    "env": "MANIFEST_FILE"
+                }
+            },
+            "node_port": {
+                "definition": "node_port",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "access kubernetes services via NodePort rather than LoadBalancer.",
+                "destination": {
+                    "env": "NODE_PORT"
+                }
+            }
+        }
+    },
+    "definitions": {
         "log_level": {
             "default": "info",
+            "type": "string"
+        },
+        "manifest_file": {
+            "default": "/cnab/app/kab/manifest.yaml",
             "type": "string"
         },
         "node_port": {
             "default": "false",
             "type": "boolean"
-        }
-    },
-    "parameters": {
-        "fields": {
-            "manifest_file": {
-                "applyTo": ["install"],
-                "definition": "manifest_file",
-                "destination": {
-                    "env": "MANIFEST_FILE"
-                },
-                "description": "absolute path to the manifest file"
-            },
-            "log_level": {
-                "applyTo": ["install"],
-                "definition": "log_level",
-                "destination": {
-                    "env": "LOG_LEVEL"
-                },
-                "description": "one of logrus log level values"
-            },
-            "node_port": {
-                "applyTo": ["install"],
-                "definition": "node_port",
-                "destination": {
-                    "env": "NODE_PORT"
-                },
-                "description": "access kubernetes services via NodePort rather than LoadBalancer."
-            }
         }
     }
 }
