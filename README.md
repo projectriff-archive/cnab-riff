@@ -48,3 +48,6 @@ To uninstall, set the SERVICE_ACCOUNT and KUBE_NAMESPACE environment variables a
 ```
 duffle uninstall myriff -d k8s
 ```
+
+## Developing
+Modify the `kab-manifest.yaml` file to update riff components. Then run `make bundle` to generate the `duffle.json` and `cnab/app/kab/manifest.yaml` file.
