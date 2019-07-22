@@ -17,9 +17,11 @@ import (
 	"github.com/projectriff/k8s-manifest-scanner/pkg/scan"
 )
 
-// this performs two tasks:
+// this performs following tasks:
 // 1. inlines the content of the resource url into the bundle
 // 2. adds images to duffle.json by scanning the resource content
+// 3. computes digests for images
+// 4. replaces image references in kab manifest with digested references
 func FinalizeBundle(bundlePath, kabManifestPath string) error {
 	mfst := &manifest.Manifest{}
 	err := unmarshallFile(bundlePath, mfst)
@@ -39,6 +41,8 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 
 	mfst.Images = map[string]bundle.Image{}
 	r := registry.NewRegistryClient()
+	replacements := []string{}
+
 	for _, img := range images {
 		name, err := image.NewName(img)
 		if err != nil {
@@ -57,9 +61,17 @@ func FinalizeBundle(bundlePath, kabManifestPath string) error {
 		}
 		bunImg.Image = nameWithDigest.String()
 		mfst.Images[n] = bunImg
+
+		replacements = append(replacements, img, nameWithDigest.String())
 	}
 
 	err = marshallJsonFile(bundlePath, mfst)
+	if err != nil {
+		return err
+	}
+
+	err = ReplaceInKabManifest(kabManifestPath, *strings.NewReplacer(replacements...))
+
 	return err
 
 }
@@ -148,6 +160,24 @@ func InlineContentInKabManifest(kabManifestPath string) error {
 			return "", err
 		}
 		return string(contentBytes), nil
+	})
+	if err != nil {
+		return err
+	}
+
+	err = marshallYamlFile(kabManifestPath, kabMfst)
+	return err
+}
+
+func ReplaceInKabManifest(kabManifestPath string, replacer strings.Replacer) error {
+	kabMfst := &v1alpha1.Manifest{}
+	err := unmarshallFile(kabManifestPath, kabMfst)
+	if err != nil {
+		return err
+	}
+
+	err = kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
+		return replacer.Replace(res.Content), nil
 	})
 	if err != nil {
 		return err
