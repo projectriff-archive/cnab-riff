@@ -23,13 +23,13 @@ import (
 // 4. replaces image references in kab manifest with digested references
 func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath string) error {
 	mfst := &manifest.Manifest{}
-	err := unmarshallFile(bundlePath, mfst)
+	err := unmarshalFile(bundlePath, mfst)
 	if err != nil {
 		return err
 	}
 
 	kabMfst := &v1alpha1.Manifest{}
-	err = unmarshallFile(kabManifestPath, kabMfst)
+	err = unmarshalFile(kabManifestPath, kabMfst)
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 		return err
 	}
 
-	images, err := GetImagesFromKabManifest(kabMfst)
+	images, err := getImagesFromKabManifest(kabMfst)
 	if err != nil {
 		return err
 	}
@@ -72,41 +72,39 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 		replacements = append(replacements, img, nameWithDigest.String())
 	}
 
-	err = marshallJsonFile(bundlePath, mfst)
+	err = marshalJsonFile(bundlePath, mfst)
 	if err != nil {
 		return err
 	}
 
-	err = ReplaceInKabManifest(kabMfst, *strings.NewReplacer(replacements...))
+	err = replaceInKabManifest(kabMfst, *strings.NewReplacer(replacements...))
 	if err != nil {
 		return err
 	}
 
-	err = marshallYamlFile(kabManifestDestinationPath, kabMfst)
+	err = marshalYamlFile(kabManifestDestinationPath, kabMfst)
 	return err
 
 }
 
-func unmarshalFile(path string, str interface{}) error {
+func unmarshalFile(path string, manifest interface{}) error {
 	mfstBytes, err := ioutil.ReadFile(path)
 	if err != nil {
-		fmt.Printf("error reading file %s: %v", path, err)
-		return err
+		return fmt.Errorf("error reading file %s: %v", path, err)
 	}
-	err = yaml.Unmarshal(mfstBytes, str)
+	err = yaml.Unmarshal(mfstBytes, manifest)
 	if err != nil {
-		fmt.Printf("error unmarshalling file %s: %v", path, err)
-		return err
+		return fmt.Errorf("error unmarshalling file %s: %v", path, err)
 	}
 	return nil
 }
 
-func marshalJsonFile(path string, str interface{}) error {
-	mfstBytes, err := json.MarshalIndent(str, "", "    ")
+func marshalJsonFile(path string, manifest interface{}) error {
+	mfstBytes, err := json.MarshalIndent(manifest, "", "    ")
 	if err != nil {
 		return err
 	}
-	return writeFile(path, str, mfstBytes)
+	return writeFile(path, manifest, mfstBytes)
 }
 
 func marshalYamlFile(path string, str interface{}) error {
@@ -126,7 +124,7 @@ func writeFile(path string, str interface{}, content []byte) error {
 	return nil
 }
 
-func GetImagesFromKabManifest(kabMfst *v1alpha1.Manifest) ([]string, error) {
+func getImagesFromKabManifest(kabMfst *v1alpha1.Manifest) ([]string, error) {
 
 	images := []string{}
 
@@ -151,7 +149,7 @@ func GetImagesFromKabManifest(kabMfst *v1alpha1.Manifest) ([]string, error) {
 	return images, err
 }
 
-func ReplaceInKabManifest(kabMfst *v1alpha1.Manifest, replacer strings.Replacer) error {
+func replaceInKabManifest(kabMfst *v1alpha1.Manifest, replacer strings.Replacer) error {
 
 	err := kabMfst.PatchResourceContent(func(res *v1alpha1.KabResource) (string, error) {
 		return replacer.Replace(res.Content), nil

@@ -55,14 +55,14 @@
         },
         "docker.io_projectriff_builder:0.3.0-snapshot": {
             "imageType": "",
-            "image": "docker.io/projectriff/builder:0.3.0-snapshot@sha256:6fcce0b8a3582130f9fd50ff0b5b019993284f81270087e80cd7ddfad2b79611",
-            "digest": "sha256:6fcce0b8a3582130f9fd50ff0b5b019993284f81270087e80cd7ddfad2b79611",
+            "image": "docker.io/projectriff/builder:0.3.0-snapshot@sha256:e3fcbcd4329d4599dffb805580672b4da124f1116d081af97a4b0d791a51efc2",
+            "digest": "sha256:e3fcbcd4329d4599dffb805580672b4da124f1116d081af97a4b0d791a51efc2",
             "description": ""
         },
         "gcr.io_cloud-builders_gcs-fetcher": {
             "imageType": "",
-            "image": "gcr.io/cloud-builders/gcs-fetcher@sha256:367619ff219e7941d2ccc2041621d07e292ef4e94f7373d0b1f98d6828a73bcb",
-            "digest": "sha256:367619ff219e7941d2ccc2041621d07e292ef4e94f7373d0b1f98d6828a73bcb",
+            "image": "gcr.io/cloud-builders/gcs-fetcher@sha256:31dfcc0555bec9744a207ffe8baf2131b2bbb82539fe8d31af3dde42c959f6c9",
+            "digest": "sha256:31dfcc0555bec9744a207ffe8baf2131b2bbb82539fe8d31af3dde42c959f6c9",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_controller@sha256:5adb5ba0647a7b1af1d90848bf72a75fa84efeb89e1d688465a2105c1cce1dc2": {
