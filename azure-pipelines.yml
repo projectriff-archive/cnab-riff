@@ -16,6 +16,8 @@ jobs:
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
     NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
   steps:
+  - bash: make bundle
+    displayName: 'update bundle with image names'
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
@@ -54,6 +56,8 @@ jobs:
     vmImage: 'ubuntu-16.04'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
+  - bash: make bundle
+    displayName: 'update bundle with image names'
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
