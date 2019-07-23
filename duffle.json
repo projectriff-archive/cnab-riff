@@ -49,8 +49,8 @@
         },
         "docker.io_library_ubuntu:18.04": {
             "imageType": "",
-            "image": "docker.io/library/ubuntu:18.04@sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395",
-            "digest": "sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395",
+            "image": "docker.io/library/ubuntu:18.04@sha256:d91842ef309155b85a9e5c59566719308fab816b40d376809c39cf1cf4de3c6a",
+            "digest": "sha256:d91842ef309155b85a9e5c59566719308fab816b40d376809c39cf1cf4de3c6a",
             "description": ""
         },
         "docker.io_projectriff_builder:0.3.0-snapshot": {

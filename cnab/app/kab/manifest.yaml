@@ -4157,7 +4157,7 @@ spec:
 
         steps:
         - name: prepare
-          image: docker.io/library/ubuntu:18.04@sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395
+          image: docker.io/library/ubuntu:18.04@sha256:d91842ef309155b85a9e5c59566719308fab816b40d376809c39cf1cf4de3c6a
           command: ["/bin/sh"]
           args:
           - "-c"
@@ -4299,7 +4299,7 @@ spec:
 
         steps:
         - name: prepare
-          image: docker.io/library/ubuntu:18.04@sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395
+          image: docker.io/library/ubuntu:18.04@sha256:d91842ef309155b85a9e5c59566719308fab816b40d376809c39cf1cf4de3c6a
           command: ["/bin/sh"]
           args:
           - "-c"
