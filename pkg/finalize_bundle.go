@@ -87,7 +87,7 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 
 }
 
-func unmarshallFile(path string, str interface{}) error {
+func unmarshalFile(path string, str interface{}) error {
 	mfstBytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		fmt.Printf("error reading file %s: %v", path, err)
@@ -101,22 +101,20 @@ func unmarshallFile(path string, str interface{}) error {
 	return nil
 }
 
-func marshallJsonFile(path string, str interface{}) error {
+func marshalJsonFile(path string, str interface{}) error {
 	mfstBytes, err := json.MarshalIndent(str, "", "    ")
 	if err != nil {
 		return err
 	}
-	err = writeFile(path, str, mfstBytes)
-	return err
+	return writeFile(path, str, mfstBytes)
 }
 
-func marshallYamlFile(path string, str interface{}) error {
+func marshalYamlFile(path string, str interface{}) error {
 	mfstBytes, err := yaml.Marshal(str)
 	if err != nil {
 		return err
 	}
-	err = writeFile(path, str, mfstBytes)
-	return err
+	return writeFile(path, str, mfstBytes)
 }
 
 func writeFile(path string, str interface{}, content []byte) error {
