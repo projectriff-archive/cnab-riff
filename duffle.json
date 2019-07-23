@@ -25,107 +25,128 @@
     "images": {
         "docker.io_cloudfoundry_cnb:0.0.5-bionic": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/cloudfoundry/cnb:0.0.5-bionic@sha256:93e2707b756ed9544ecccab6884424e4990e2b3ec08f0435b8249499b51b2354",
+            "digest": "sha256:93e2707b756ed9544ecccab6884424e4990e2b3ec08f0435b8249499b51b2354",
             "description": ""
         },
         "docker.io_istio_node-agent-k8s:1.1.7": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/istio/node-agent-k8s:1.1.7@sha256:5de4f4b29193003f423884f140b7df0c504ae184705b1a75041877072f5ab518",
+            "digest": "sha256:5de4f4b29193003f423884f140b7df0c504ae184705b1a75041877072f5ab518",
             "description": ""
         },
         "docker.io_istio_pilot:1.1.7": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/istio/pilot:1.1.7@sha256:428959abad1e61f4adbfb3b35ec61d85c952c7c46696e15adc7b3863eb9719f5",
+            "digest": "sha256:428959abad1e61f4adbfb3b35ec61d85c952c7c46696e15adc7b3863eb9719f5",
             "description": ""
         },
         "docker.io_istio_proxyv2:1.1.7": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/istio/proxyv2:1.1.7@sha256:e6f039115c7d5ef9c8f6b049866fbf9b6f5e2255d3a733bb8756b36927749822",
+            "digest": "sha256:e6f039115c7d5ef9c8f6b049866fbf9b6f5e2255d3a733bb8756b36927749822",
             "description": ""
         },
         "docker.io_library_ubuntu:18.04": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/library/ubuntu:18.04@sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395",
+            "digest": "sha256:eb70667a801686f914408558660da753cde27192cd036148e58258819b927395",
             "description": ""
         },
         "docker.io_projectriff_builder:0.3.0-snapshot": {
             "imageType": "",
-            "image": "",
+            "image": "docker.io/projectriff/builder:0.3.0-snapshot@sha256:6fcce0b8a3582130f9fd50ff0b5b019993284f81270087e80cd7ddfad2b79611",
+            "digest": "sha256:6fcce0b8a3582130f9fd50ff0b5b019993284f81270087e80cd7ddfad2b79611",
             "description": ""
         },
         "gcr.io_cloud-builders_gcs-fetcher": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/cloud-builders/gcs-fetcher@sha256:367619ff219e7941d2ccc2041621d07e292ef4e94f7373d0b1f98d6828a73bcb",
+            "digest": "sha256:367619ff219e7941d2ccc2041621d07e292ef4e94f7373d0b1f98d6828a73bcb",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_controller@sha256:5adb5ba0647a7b1af1d90848bf72a75fa84efeb89e1d688465a2105c1cce1dc2": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/build/cmd/controller@sha256:5adb5ba0647a7b1af1d90848bf72a75fa84efeb89e1d688465a2105c1cce1dc2",
+            "digest": "sha256:5adb5ba0647a7b1af1d90848bf72a75fa84efeb89e1d688465a2105c1cce1dc2",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_creds-init@sha256:1a984c032a2606f8491f4a19a85209dcc1ae2cfd494c3dafe8a74269379ad2c8": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/build/cmd/creds-init@sha256:1a984c032a2606f8491f4a19a85209dcc1ae2cfd494c3dafe8a74269379ad2c8",
+            "digest": "sha256:1a984c032a2606f8491f4a19a85209dcc1ae2cfd494c3dafe8a74269379ad2c8",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_git-init@sha256:06505d8c621e9337d0dd1bc13ed4545a33e857fbb6374740cc6337d2ba55796d": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/build/cmd/git-init@sha256:06505d8c621e9337d0dd1bc13ed4545a33e857fbb6374740cc6337d2ba55796d",
+            "digest": "sha256:06505d8c621e9337d0dd1bc13ed4545a33e857fbb6374740cc6337d2ba55796d",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_nop@sha256:8aca9c97ede9a550ac3536d00c5d7acaae5e3a4fe514f4329ec261d935eddabb": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/build/cmd/nop@sha256:8aca9c97ede9a550ac3536d00c5d7acaae5e3a4fe514f4329ec261d935eddabb",
+            "digest": "sha256:8aca9c97ede9a550ac3536d00c5d7acaae5e3a4fe514f4329ec261d935eddabb",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_build_cmd_webhook@sha256:35b1b5f72642e9c1ee71809fec309a019111beebf805f9ddddf154a97ad23975": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/build/cmd/webhook@sha256:35b1b5f72642e9c1ee71809fec309a019111beebf805f9ddddf154a97ad23975",
+            "digest": "sha256:35b1b5f72642e9c1ee71809fec309a019111beebf805f9ddddf154a97ad23975",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_activator@sha256:57fe5f1a8b1d12f29fe9e3a904b00c7219e5ce5825d94f33339db929e92257db": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/activator@sha256:57fe5f1a8b1d12f29fe9e3a904b00c7219e5ce5825d94f33339db929e92257db",
+            "digest": "sha256:57fe5f1a8b1d12f29fe9e3a904b00c7219e5ce5825d94f33339db929e92257db",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_autoscaler@sha256:2c2370df2751741348e1cc456f31425cb2455c377ddb45d3f6c17e743fd63d78": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/autoscaler@sha256:2c2370df2751741348e1cc456f31425cb2455c377ddb45d3f6c17e743fd63d78",
+            "digest": "sha256:2c2370df2751741348e1cc456f31425cb2455c377ddb45d3f6c17e743fd63d78",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_controller@sha256:016c95f2d94be89683d1ddb7ea959667fd2d899087a4145a31d26b5d6f0bb38f": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/controller@sha256:016c95f2d94be89683d1ddb7ea959667fd2d899087a4145a31d26b5d6f0bb38f",
+            "digest": "sha256:016c95f2d94be89683d1ddb7ea959667fd2d899087a4145a31d26b5d6f0bb38f",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_networking_certmanager@sha256:c757629165393f778d5c0e8b611c9c4857b24f0c748d985d3a080d0161a85248": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/networking/certmanager@sha256:c757629165393f778d5c0e8b611c9c4857b24f0c748d985d3a080d0161a85248",
+            "digest": "sha256:c757629165393f778d5c0e8b611c9c4857b24f0c748d985d3a080d0161a85248",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_networking_istio@sha256:bb4407e4714511cd9429e86536c283265629a2c11c80633d91c0f798c494a16f": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/networking/istio@sha256:bb4407e4714511cd9429e86536c283265629a2c11c80633d91c0f798c494a16f",
+            "digest": "sha256:bb4407e4714511cd9429e86536c283265629a2c11c80633d91c0f798c494a16f",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_queue@sha256:e007c0a78c541600466f88954deee65c517246a23345bfba45a7f212d09b8f3b": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/queue@sha256:e007c0a78c541600466f88954deee65c517246a23345bfba45a7f212d09b8f3b",
+            "digest": "sha256:e007c0a78c541600466f88954deee65c517246a23345bfba45a7f212d09b8f3b",
             "description": ""
         },
         "gcr.io_knative-releases_github.com_knative_serving_cmd_webhook@sha256:d9918d40492e0b20b48576ff6182e2ab896e50dfd2313cb471419be98f821b9c": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/knative-releases/github.com/knative/serving/cmd/webhook@sha256:d9918d40492e0b20b48576ff6182e2ab896e50dfd2313cb471419be98f821b9c",
+            "digest": "sha256:d9918d40492e0b20b48576ff6182e2ab896e50dfd2313cb471419be98f821b9c",
             "description": ""
         },
         "gcr.io_projectriff_system_github.com_projectriff_system_cmd_controller@sha256:c4d546d44504fc33d0d6acb8a1e111475f21f43eaad5871eca9d1e1a9a283fd0": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/projectriff/system/github.com/projectriff/system/cmd/controller@sha256:c4d546d44504fc33d0d6acb8a1e111475f21f43eaad5871eca9d1e1a9a283fd0",
+            "digest": "sha256:c4d546d44504fc33d0d6acb8a1e111475f21f43eaad5871eca9d1e1a9a283fd0",
             "description": ""
         },
         "gcr.io_projectriff_system_github.com_projectriff_system_cmd_webhook@sha256:f395749cf7e47ebc304c7cd03b8b597da5318a3c66e1c6b6e5da2ab71f487db3": {
             "imageType": "",
-            "image": "",
+            "image": "gcr.io/projectriff/system/github.com/projectriff/system/cmd/webhook@sha256:f395749cf7e47ebc304c7cd03b8b597da5318a3c66e1c6b6e5da2ab71f487db3",
+            "digest": "sha256:f395749cf7e47ebc304c7cd03b8b597da5318a3c66e1c6b6e5da2ab71f487db3",
             "description": ""
         }
     },

@@ -55,7 +55,6 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 		}
 		bundleImageKey := strings.ReplaceAll(name.String(), "/", "_")
 		bundleImage := bundle.Image{}
-		mfst.Images[bundleImageKey] = bundleImage
 
 		digest, err := registryClient.Digest(name)
 		if err != nil {
@@ -67,6 +66,8 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 			return err
 		}
 		bundleImage.Image = nameWithDigest.String()
+
+		mfst.Images[bundleImageKey] = bundleImage
 
 		replacements = append(replacements, img, nameWithDigest.String())
 	}
