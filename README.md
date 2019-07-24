@@ -24,12 +24,22 @@ Once you have a running kubernetes cluster follow the steps below
 
 1. Install duffle by download the latest duffle release for your operating system from duffle's [release page](https://github.com/deislabs/duffle/releases), put it somewhere on your path, and make it executable, for example, `chmod +x /usr/local/bin/duffle`.
 1. Set environment variables required by duffle k8s driver and create the service account
+
+    On macOS or Linux use:
     ```
     export SERVICE_ACCOUNT=duffle-runtime
     export KUBE_NAMESPACE=duffle
     kubectl create namespace $KUBE_NAMESPACE
     kubectl create serviceaccount "${SERVICE_ACCOUNT}" -n "${KUBE_NAMESPACE}"
     kubectl create clusterrolebinding "${SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${KUBE_NAMESPACE}:${SERVICE_ACCOUNT}"
+    ```
+    On Windows use:
+    ```
+    $env:SERVICE_ACCOUNT='duffle-runtime'
+    $env:KUBE_NAMESPACE='duffle'
+    kubectl create namespace ${env:KUBE_NAMESPACE}
+    kubectl create serviceaccount "${env:SERVICE_ACCOUNT}" -n "${env:KUBE_NAMESPACE}"
+    kubectl create clusterrolebinding "${env:SERVICE_ACCOUNT}-cluster-admin" --clusterrole cluster-admin --serviceaccount "${env:KUBE_NAMESPACE}:${env:SERVICE_ACCOUNT}"
     ```
 1. install riff
 
