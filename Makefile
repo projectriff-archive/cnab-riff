@@ -27,4 +27,4 @@ build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
 
 bundle: build
-	@./bin/finalize-bundle && git status --porcelain | (! grep .) || (echo dirty working tree && false)
+	@./bin/finalize-bundle && duffle build .

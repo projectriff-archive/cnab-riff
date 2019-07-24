@@ -1,0 +1,73 @@
+{
+    "name": "riff",
+    "version": "0.1.0",
+    "schemaVersion": "v1.0.0-WD",
+    "description": "Installs riff",
+    "keywords": [
+        "riff"
+    ],
+    "maintainers": [
+        {
+            "name": "Swapnil Bawaskar",
+            "email": "sbawaska@pivotal.io",
+            "url": "https://projectriff.io"
+        }
+    ],
+    "invocationImages": {
+        "cnab": {
+            "name": "cnab",
+            "builder": "docker",
+            "configuration": {
+                "registry": "projectriff"
+            }
+        }
+    },
+    "parameters": {
+        "fields": {
+            "log_level": {
+                "definition": "log_level",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "one of logrus log level values",
+                "destination": {
+                    "env": "LOG_LEVEL"
+                }
+            },
+            "manifest_file": {
+                "definition": "manifest_file",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "absolute path to the manifest file",
+                "destination": {
+                    "env": "MANIFEST_FILE"
+                }
+            },
+            "node_port": {
+                "definition": "node_port",
+                "applyTo": [
+                    "install"
+                ],
+                "description": "access kubernetes services via NodePort rather than LoadBalancer.",
+                "destination": {
+                    "env": "NODE_PORT"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "log_level": {
+            "default": "info",
+            "type": "string"
+        },
+        "manifest_file": {
+            "default": "/cnab/app/kab/manifest.yaml",
+            "type": "string"
+        },
+        "node_port": {
+            "default": "false",
+            "type": "boolean"
+        }
+    }
+}

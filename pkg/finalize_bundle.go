@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/deislabs/cnab-go/bundle"
@@ -21,7 +22,7 @@ import (
 // 2. adds images to duffle.json by scanning the resource content
 // 3. computes digests for images
 // 4. replaces image references in kab manifest with digested references
-func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath string) error {
+func FinalizeBundle(bundlePath, bundleDestinationPath, kabManifestPath, kabManifestDestinationPath string) error {
 	mfst := &manifest.Manifest{}
 	err := unmarshalFile(bundlePath, mfst)
 	if err != nil {
@@ -72,7 +73,7 @@ func FinalizeBundle(bundlePath, kabManifestPath, kabManifestDestinationPath stri
 		replacements = append(replacements, img, nameWithDigest.String())
 	}
 
-	err = marshalJsonFile(bundlePath, mfst)
+	err = marshalJsonFile(bundleDestinationPath, mfst)
 	if err != nil {
 		return err
 	}
@@ -104,7 +105,7 @@ func marshalJsonFile(path string, manifest interface{}) error {
 	if err != nil {
 		return err
 	}
-	return writeFile(path, manifest, mfstBytes)
+	return writeFile(path, mfstBytes)
 }
 
 func marshalYamlFile(path string, str interface{}) error {
@@ -112,11 +113,17 @@ func marshalYamlFile(path string, str interface{}) error {
 	if err != nil {
 		return err
 	}
-	return writeFile(path, str, mfstBytes)
+	return writeFile(path, mfstBytes)
 }
 
-func writeFile(path string, str interface{}, content []byte) error {
-	err := ioutil.WriteFile(path, content, 0644)
+func writeFile(path string, content []byte) error {
+	dir := filepath.Dir(path)
+	err := os.MkdirAll(dir, 0700)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(path, content, 0644)
 	if err != nil {
 		return err
 	}

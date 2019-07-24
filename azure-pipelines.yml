@@ -25,7 +25,7 @@ jobs:
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle
     displayName: 'Install tools'
-  - script: duffle init && duffle build .
+  - script: duffle init && make build
     displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
