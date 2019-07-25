@@ -50,7 +50,6 @@ duffle uninstall myriff -d k8s
 ```
 
 ## Developing
-Modify the `kab-manifest.yaml` file to update riff components. Then run `make bundle` which will:
-- generate `duffle.json`
-- generate `cnab/app/kab/manifest.yaml`
-- build the cnab bundle using `duffle`
+- Modify the `cnab/app/kab/manifest.yaml` file to update riff components. 
+- To build the bundle run `duffle build .`
+- To pin the images used in `duffle.json` and `manifest.yaml` files run `make bundle`. 

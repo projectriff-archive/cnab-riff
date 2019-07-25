@@ -27,4 +27,4 @@ build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
 
 bundle: build
-	@./bin/finalize-bundle && duffle build .
+	@./bin/finalize-bundle && cp -r cnab build/ && pushd build && duffle build . && popd
