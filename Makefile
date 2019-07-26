@@ -26,5 +26,8 @@ install: build
 build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
 
-bundle: build
+bundle: clean build
 	@./bin/finalize-bundle && cp -r cnab build/ && cd build && duffle build . && cd ..
+
+clean:
+	rm -rf build
