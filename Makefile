@@ -1,6 +1,6 @@
 .PHONY: build clean test all
 
-OUTPUT = ./bin/finalize-bundle
+OUTPUT = ./build/finalize-bundle
 GO_SOURCES = $(shell find . -type f -name '*.go')
 VERSION ?= $(shell cat VERSION)
 
@@ -27,7 +27,7 @@ build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
 
 bundle: clean build
-	@./bin/finalize-bundle && cp -r cnab build/ && cd build && duffle build . && cd ..
+	cp -r cnab build/ && cp duffle.json build/ && cd build && ./finalize-bundle && duffle build . && cd ..
 
 clean:
 	rm -rf build

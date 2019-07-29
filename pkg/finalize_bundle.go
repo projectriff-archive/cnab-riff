@@ -22,7 +22,7 @@ import (
 // 2. adds images to duffle.json by scanning the resource content
 // 3. computes digests for images
 // 4. replaces image references in kab manifest with digested references
-func FinalizeBundle(bundlePath, bundleDestinationPath, kabManifestPath, kabManifestDestinationPath string) error {
+func FinalizeBundle(bundlePath, kabManifestPath string) error {
 	mfst := &manifest.Manifest{}
 	err := unmarshalFile(bundlePath, mfst)
 	if err != nil {
@@ -73,7 +73,7 @@ func FinalizeBundle(bundlePath, bundleDestinationPath, kabManifestPath, kabManif
 		replacements = append(replacements, img, nameWithDigest.String())
 	}
 
-	err = marshalJsonFile(bundleDestinationPath, mfst)
+	err = marshalJsonFile(bundlePath, mfst)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func FinalizeBundle(bundlePath, bundleDestinationPath, kabManifestPath, kabManif
 		return err
 	}
 
-	err = marshalYamlFile(kabManifestDestinationPath, kabMfst)
+	err = marshalYamlFile(kabManifestPath, kabMfst)
 	return err
 
 }
