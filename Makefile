@@ -27,7 +27,8 @@ build: $(GO_SOURCES) VERSION
 	GO111MODULE=on go build -o $(OUTPUT) ./cmd/finalize-bundle
 
 bundle: clean build
-	cp -r cnab build/ && cp duffle.json build/ && cd build && ./finalize-bundle && duffle build . && cd ..
+	cp -r cnab build/ && cp duffle.json build/
+	( cd build && ./finalize-bundle && duffle build . )
 
 clean:
 	rm -rf build

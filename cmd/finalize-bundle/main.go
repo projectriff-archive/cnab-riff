@@ -27,7 +27,7 @@ func verifyCommandLineArgs(args []string) (bundleTemplatePath, manifestPath stri
 		return "duffle.json", "./cnab/app/kab/manifest.yaml", nil
 	}
 	if len(args) != 3 {
-		return "", "", errors.New("usage: ./list-images <path/to/duffle.json> </path/to/kab-manifest.yaml>")
+		return "", "", errors.New("usage: ./finalize-bundle <path/to/duffle.json> </path/to/kab-manifest.yaml>")
 	}
 	return args[1], args[2], nil
 }
