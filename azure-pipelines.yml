@@ -16,8 +16,6 @@ jobs:
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
     NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
   steps:
-  - bash: make bundle
-    displayName: 'update bundle with image names'
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
@@ -25,7 +23,7 @@ jobs:
       $(fatsDir)/install.sh riff
       $(fatsDir)/install.sh duffle
     displayName: 'Install tools'
-  - script: duffle init && duffle build .
+  - bash: duffle init && make bundle
     displayName: 'Build bundle'
   - script: $(fatsDir)/start.sh
     displayName: 'Start FATS'
@@ -56,12 +54,14 @@ jobs:
     vmImage: 'ubuntu-16.04'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   steps:
-  - bash: make bundle
-    displayName: 'update bundle with image names'
   - bash: ./ci/fats-fetch.sh $(fatsDir) $(fatsRefspec) projectriff/fats
     displayName: 'Fetch FATS'
   - bash: |
       $(fatsDir)/install.sh duffle
+    displayName: 'Install Tools'
+  - bash: duffle init && make bundle
+    displayName: 'Make bundle'
+  - bash: |
       $(fatsDir)/install.sh gcloud
       ./ci/stage-bundle.sh
     env:
