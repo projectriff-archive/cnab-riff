@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/deislabs/cnab-go/bundle"
@@ -117,13 +116,7 @@ func marshalYamlFile(path string, str interface{}) error {
 }
 
 func writeFile(path string, content []byte) error {
-	dir := filepath.Dir(path)
-	err := os.MkdirAll(dir, 0700)
-	if err != nil {
-		return err
-	}
-
-	err = ioutil.WriteFile(path, content, 0644)
+	err := ioutil.WriteFile(path, content, 0644)
 	if err != nil {
 		return err
 	}
