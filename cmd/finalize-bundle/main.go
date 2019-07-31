@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	cnab_riff "github.com/projectriff/cnab-riff/pkg"
+	"github.com/projectriff/k8s-manifest-scanner/pkg/bundle"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = cnab_riff.FinalizeBundle(bundlePath, manifestPath)
+	err = bundle.Finalize(bundlePath, manifestPath)
 	if err != nil {
 		fmt.Printf("error updating bundle: %v\n", err)
 		os.Exit(1)
