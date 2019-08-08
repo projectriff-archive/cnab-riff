@@ -8,8 +8,6 @@ version=`cat VERSION`
 commit=$(git rev-parse HEAD)
 bucket=gs://projectriff/riff-cnab
 
-duffle init
-duffle build .
 duffle export riff -t
 tar -xvzf riff-*.tgz
 
