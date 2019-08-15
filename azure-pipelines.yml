@@ -12,7 +12,7 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   variables:
     CLUSTER: minikube
-    REGISTRY: minikube
+    REGISTRY: docker-daemon
     CLUSTER_NAME: 'cnab-$(Build.BuildId)-minikube'
     NAMESPACE: 'cnab-$(Build.BuildId)-minikube'
   steps:
