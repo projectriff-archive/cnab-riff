@@ -23,36 +23,34 @@
         }
     },
     "parameters": {
-        "fields": {
-            "log_level": {
-                "definition": "log_level",
-                "applyTo": [
-                    "install"
-                ],
-                "description": "one of logrus log level values",
-                "destination": {
-                    "env": "LOG_LEVEL"
-                }
-            },
-            "manifest_file": {
-                "definition": "manifest_file",
-                "applyTo": [
-                    "install"
-                ],
-                "description": "absolute path to the manifest file",
-                "destination": {
-                    "env": "MANIFEST_FILE"
-                }
-            },
-            "node_port": {
-                "definition": "node_port",
-                "applyTo": [
-                    "install"
-                ],
-                "description": "access kubernetes services via NodePort rather than LoadBalancer.",
-                "destination": {
-                    "env": "NODE_PORT"
-                }
+        "log_level": {
+            "definition": "log_level",
+            "applyTo": [
+                "install"
+            ],
+            "description": "one of logrus log level values",
+            "destination": {
+                "env": "LOG_LEVEL"
+            }
+        },
+        "manifest_file": {
+            "definition": "manifest_file",
+            "applyTo": [
+                "install"
+            ],
+            "description": "absolute path to the manifest file",
+            "destination": {
+                "env": "MANIFEST_FILE"
+            }
+        },
+        "node_port": {
+            "definition": "node_port",
+            "applyTo": [
+                "install"
+            ],
+            "description": "access kubernetes services via NodePort rather than LoadBalancer.",
+            "destination": {
+                "env": "NODE_PORT"
             }
         }
     },
