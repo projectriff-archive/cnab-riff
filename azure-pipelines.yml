@@ -1,7 +1,7 @@
 
 variables:
   fatsDir: '$(system.defaultWorkingDirectory)/../fats'
-  fatsRefspec: 4d76fb0d29c92bc5cf560c3d94042e1e46355048 # projectriff/fats master as of 2019-08-08
+  fatsRefspec: c64950508fac705837205503ed4c8611acccc9c0 # projectriff/fats master as of 2019-08-15
   duffleNamespace: kube-system
   duffleServiceAccount: duffle-runtime
 
