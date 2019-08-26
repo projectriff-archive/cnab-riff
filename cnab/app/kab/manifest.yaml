@@ -1,7 +1,6 @@
 apiVersion: projectriff.io/v1alpha1
 kind: Manifest
 metadata:
-  namespace: kube-system
   name: riff-install
 spec:
   resources:
